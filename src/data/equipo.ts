@@ -40,7 +40,7 @@ export const equipo: TeamMember[] = [
     id: "gabriel-rios",
     name: "Gabriel Angel Rios",
     role: "Encargado en servicios de Microtik",
-    photo: "/equipo/Gabriel-Rios.jpeg",
+    photo: "/equipo/gabrielrios.jpeg",
     linkedinUrl: "https://www.linkedin.com/in/gabriel-rios-43291651/",
   },
   {
