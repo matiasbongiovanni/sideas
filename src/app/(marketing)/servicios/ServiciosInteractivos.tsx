@@ -63,9 +63,8 @@ export default function ServiciosInteractivos() {
                 {/* ── GRID DE TARJETAS (Animado) ── */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {serviciosFiltrados.map((servicio) => (
-                        <Link
+                        <div
                             key={servicio.id}
-                            href={`/servicios/${servicio.id}`}
                             className="group relative flex flex-col justify-between p-8 bg-white rounded-3xl border border-slate-200 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#4398FF]/10 hover:border-[#4398FF]/30 z-10"
                         >
                             {/* Ícono grande y llamativo */}
@@ -82,19 +81,7 @@ export default function ServiciosInteractivos() {
                                     {servicio.description}
                                 </p>
                             </div>
-
-                            {/* Falso botón que se anima en hover */}
-                            <div className="mt-8 flex items-center justify-between border-t border-slate-100 pt-5">
-                                <span className="text-sm font-bold text-slate-400 group-hover:text-[#4398FF] transition-colors">
-                                    Ver características
-                                </span>
-                                <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 transition-all duration-300 group-hover:bg-[#4398FF]/10 group-hover:text-[#4398FF]">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </Link>
+                        </div>
                     ))}
                 </div>
 

@@ -32,23 +32,23 @@ export const equipo: TeamMember[] = [
   {
     id: "matias-bongiovanni",
     name: "Matias Bongiovanni",
-    role: "Desarrollador de proyctos",
-    photo: "/equipo/matiasbongiovanni.jpeg",
-    linkedinUrl: "https://www.linkedin.com/in/josemartinengo/",
+    role: "Desarrollador de proyectos",
+    photo: "/equipo/matias-bongiovanni.jpeg",
+    linkedinUrl: "https://www.linkedin.com/in/matibongiovanni/",
   },
   {
     id: "gabriel-rios",
     name: "Gabriel Angel Rios",
     role: "Encargado en servicios de Microtik",
     photo: "/equipo/gabriel-rios.jpeg",
-    linkedinUrl: "https://www.linkedin.com/in/josemartinengo/",
+    linkedinUrl: "https://www.linkedin.com/in/gabriel-rios-43291651/",
   },
   {
     id: "ivan-calderon",
     name: "Ivan Calderon",
     role: "Encargado de servicios de microtik",
     photo: "/equipo/ivan-calderon.jpeg",
-    linkedinUrl: "https://www.linkedin.com/in/josemartinengo/",
+    linkedinUrl: "https://www.linkedin.com/in/ivan-calderon-9853918a/",
   },
   {
     id: "luna-casari",

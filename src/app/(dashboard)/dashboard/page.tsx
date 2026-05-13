@@ -102,7 +102,7 @@ export default async function Dashboard() {
         <div className="flex-1 p-6 bg-slate-50 overflow-hidden">
           <div className="w-full h-full rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-white">
             <iframe
-              src="https://monitor.ingeniasa.com.ar:8080/"
+              src="https://monitor.ingeniasa.com.ar/zabbix.php?action=dashboard.view&dashboardid=1&from=now-1h&to=now"
               title="Zabbix Dashboard"
               className="w-full h-full border-none"
               allowFullScreen
