@@ -42,7 +42,7 @@ const servicios = [
         title: "Resguardo",
         subtitle: "& Monitoreo",
         description: "Backups automáticos locales y en la nube. Monitoreo de recursos en tiempo real para prevenir fallas operativas.",
-        image: "/servicios/datacenter.webp"
+        image: "/servicios/zabbix-monitoreo.jpeg"
     },
     {
         icon: (
@@ -53,7 +53,7 @@ const servicios = [
         title: "Comunicaciones",
         subtitle: "& Plataformas",
         description: "Gestión de Telefonía IP, VoIP y despliegue de plataformas colaborativas y de identidad digital empresariales.",
-        image: "/servicios/backups.webp"
+        image: "/servicios/datacenter.webp"
     },
     {
         icon: (
@@ -200,10 +200,11 @@ export default function Timeline() {
                                         src={s.image}
                                         alt={s.title}
                                         fill
-                                        className="object-cover transition-transform duration-[10000ms] ease-linear scale-105"
-                                        style={{ transform: idx === currentService ? 'scale(1.1)' : 'scale(1.05)' }} // Efecto Ken Burns sutil
+                                        sizes="(max-width: 768px) 100vw, 50vw"
+                                        className={`object-cover transition-transform duration-[10000ms] ease-linear ${idx === currentService ? 'scale-110' : 'scale-105'}`}
                                         priority={idx === 0}
                                         draggable="false"
+                                        unoptimized
                                     />
                                     {/* Overlay mejorado: Oscuridad general + Gradiente fuerte abajo para texto */}
                                     <div className="absolute inset-0 bg-slate-900/30" />
