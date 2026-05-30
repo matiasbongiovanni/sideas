@@ -57,4 +57,18 @@ export const equipo: TeamMember[] = [
     photo: "/equipo/luna-casari.jpeg",
     linkedinUrl: "https://www.linkedin.com/in/luna-casari-57496322a/",
   },
+  {
+    id: "walter-casari",
+    name: "Walter Casari",
+    role: "Especialista en infraestructura de Microsoft",
+    photo: "/equipo/walter-casari.png",
+    linkedinUrl: "https://www.linkedin.com/in/luna-casari-57496322a/",
+  },
+  {
+    id: "andrea-garcia",
+    name: "Andrea Garcia",
+    role: "Analista de Sistemas",
+    photo: "/equipo/andrea-garcia.png",
+    linkedinUrl: "https://www.linkedin.com/in/luna-casari-57496322a/",
+  },
 ]
