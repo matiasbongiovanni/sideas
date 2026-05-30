@@ -1,8 +1,13 @@
 // Script para crear usuario en Supabase
-// Ejecutar: node create-user.mjs
+// Ejecutar: SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node create-user.mjs
 
-const SUPABASE_URL = "https://pamdsyjbfykbmwawlgxj.supabase.co";
-const SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhbWRzeWpiZnlrYm13YXdsZ3hqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTc5MjkzNSwiZXhwIjoyMDkxMzY4OTM1fQ.UZEPnt_F5gpupdBUtHM5pTg-cRxmBqtPCXwokytDgkg";
+const SUPABASE_URL = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
+  console.error("Error: SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY son requeridas como variables de entorno");
+  process.exit(1);
+}
 
 const res = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
   method: "POST",
