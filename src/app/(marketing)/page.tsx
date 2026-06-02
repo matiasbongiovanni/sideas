@@ -3,7 +3,6 @@ import Hero from "@/features/marketing/components/Hero"
 import Timeline from "@/features/marketing/components/Timeline"
 import StatsWrapper from "@/features/marketing/components/StatsWrapper"
 import ClientesWrapper from "@/features/marketing/components/ClientesWrapper"
-import TestimoniosGrid from "@/features/marketing/components/TestimoniosGrid"
 import FAQ from "@/features/marketing/components/FAQ"
 import Contacto from "./contacto/Contacto"
 import ProyectosPreview from "./proyectos/Preview/ProyectosPreview"
@@ -29,7 +28,6 @@ export default function Home() {
       <Timeline />
       <ProyectosPreview />
       <ClientesWrapper />
-      <TestimoniosGrid />
       <Equipo />
       <FAQ />
       <Contacto />
