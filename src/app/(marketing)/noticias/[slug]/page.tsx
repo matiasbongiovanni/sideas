@@ -52,7 +52,7 @@ export default async function NoticiaDetalle({ params }: Props) {
   const cover = post.cover_image_url || NEWS_DEFAULT_COVER
 
   return (
-    <main className="bg-[#f8fafc] py-24">
+    <main className="bg-[#f8fafc] pt-28 pb-24">
       <article className="mx-auto max-w-4xl px-6 lg:px-8">
         <div className="mb-8 flex flex-wrap items-center gap-3">
           <span className="rounded-full bg-[#0B3C78] px-4 py-1 text-xs font-bold uppercase tracking-[0.24em] text-white">

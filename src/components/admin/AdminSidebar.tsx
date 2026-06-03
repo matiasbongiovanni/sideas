@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { FileText, LayoutDashboard, LogOut, Newspaper, ExternalLink } from "lucide-react"
+import { LayoutDashboard, LogOut, Newspaper, ExternalLink } from "lucide-react"
 import { adminLogout } from "@/lib/supabase/actions"
 
 const navItems = [
@@ -15,22 +15,21 @@ export default function AdminSidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="hidden lg:flex w-80 shrink-0 border-r border-white/10 bg-[#07111f] text-white">
+    <aside className="hidden lg:flex w-80 shrink-0 border-r border-slate-200 bg-white">
       <div className="flex min-h-screen w-full flex-col">
-        <div className="border-b border-white/10 px-8 py-6">
-          <Link href="/admin" className="inline-flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 ring-1 ring-white/10">
-              <Image src="/Sideas_Blanco.png" alt="SIDEAS" width={120} height={34} priority />
-            </div>
-            <div>
-              <p className="text-sm font-semibold tracking-[0.28em] text-[#4398FF]">CMS PRIVADO</p>
-              <p className="text-xs text-slate-400">SIDEAS Consultores</p>
-            </div>
+        <div className="border-b border-slate-200 px-8 py-6">
+          <Link href="/admin" className="inline-block">
+            <Image src="/sideas_azul.png" alt="SIDEAS" width={140} height={40} priority />
           </Link>
+          <div className="mt-3">
+            <span className="inline-flex items-center rounded-full bg-[#EEF4FF] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.28em] text-[#0B3C78]">
+              CMS Privado
+            </span>
+          </div>
         </div>
 
-        <nav className="flex-1 space-y-2 px-4 py-6">
-          <p className="px-4 pb-2 text-[10px] font-bold uppercase tracking-[0.35em] text-slate-500">
+        <nav className="flex-1 space-y-1 px-4 py-6">
+          <p className="px-4 pb-2 text-[10px] font-bold uppercase tracking-[0.35em] text-slate-400">
             Panel
           </p>
           {navItems.map((item) => {
@@ -46,8 +45,8 @@ export default function AdminSidebar() {
                 className={[
                   "flex items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-medium transition-all",
                   isActive
-                    ? "border-[#4398FF]/30 bg-[#4398FF]/10 text-[#7ab8ff]"
-                    : "border-transparent text-slate-300 hover:border-white/10 hover:bg-white/5 hover:text-white",
+                    ? "border-[#4398FF]/20 bg-[#EEF4FF] text-[#0B3C78]"
+                    : "border-transparent text-slate-600 hover:border-slate-200 hover:bg-slate-50 hover:text-slate-900",
                 ].join(" ")}
               >
                 <Icon className="h-4 w-4" aria-hidden="true" />
@@ -57,10 +56,10 @@ export default function AdminSidebar() {
           })}
         </nav>
 
-        <div className="border-t border-white/10 p-4">
+        <div className="border-t border-slate-200 p-4 space-y-2">
           <Link
             href="/noticias"
-            className="mb-3 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
           >
             <ExternalLink className="h-4 w-4" aria-hidden="true" />
             Ver noticias públicas
@@ -79,4 +78,3 @@ export default function AdminSidebar() {
     </aside>
   )
 }
-

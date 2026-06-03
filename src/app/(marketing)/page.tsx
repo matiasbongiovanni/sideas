@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import Image from "next/image"
 import Hero from "@/features/marketing/components/Hero"
 import Timeline from "@/features/marketing/components/Timeline"
 import StatsWrapper from "@/features/marketing/components/StatsWrapper"
@@ -9,8 +8,8 @@ import FAQ from "@/features/marketing/components/FAQ"
 import Contacto from "./contacto/Contacto"
 import ProyectosPreview from "./proyectos/Preview/ProyectosPreview"
 import Equipo from "./equipo/page"
+import NewsCard from "@/features/blog/components/NewsCard"
 import type { NewsPost } from "@/lib/news"
-import { formatNewsDate, getExcerpt, NEWS_DEFAULT_COVER } from "@/lib/news"
 import { listPublishedNews } from "@/lib/news.server"
 
 export const dynamic = "force-dynamic"
@@ -87,7 +86,7 @@ async function NoticiasSection() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post) => (
-              <DarkNewsCard key={post.id} post={post} />
+              <NewsCard key={post.id} post={post} />
             ))}
           </div>
         )}
@@ -96,50 +95,3 @@ async function NoticiasSection() {
   )
 }
 
-function DarkNewsCard({ post }: { post: NewsPost }) {
-  const cover = post.cover_image_url || NEWS_DEFAULT_COVER
-
-  return (
-    <div
-      className="rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(15,23,42,0.18)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_16px_48px_rgba(15,23,42,0.28)]"
-      style={{ background: "#0F172A" }}
-    >
-      <div className="relative h-52 overflow-hidden">
-        <Image
-          src={cover}
-          alt={post.title}
-          fill
-          className="object-cover transition-transform duration-700 hover:scale-[1.04]"
-          unoptimized
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/10 to-transparent" />
-        <div className="absolute top-4 left-4">
-          <span className="rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.28em] text-[#0B3C78] backdrop-blur">
-            {post.category}
-          </span>
-        </div>
-      </div>
-
-      <div className="p-6">
-        <h3 className="text-lg font-bold text-white mb-3 leading-snug">
-          {post.title}
-        </h3>
-        <p className="text-sm leading-relaxed mb-5" style={{ color: "#64748B" }}>
-          {getExcerpt(post)}
-        </p>
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-xs" style={{ color: "#64748B" }}>
-            {formatNewsDate(post.published_at)}
-          </span>
-          <Link
-            href={`/noticias/${post.slug}`}
-            className="text-sm font-semibold transition-colors hover:text-white"
-            style={{ color: "#4398FF" }}
-          >
-            Leer Más →
-          </Link>
-        </div>
-      </div>
-    </div>
-  )
-}
