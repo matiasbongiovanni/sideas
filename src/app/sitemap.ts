@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next"
 import { METADATA_BASE_URL } from "@/lib/constants"
 import { proyectos } from "@/data/proyectos"
-import { posts } from "@/data/blog"
+import { listPublishedNews } from "@/lib/news.server"
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = METADATA_BASE_URL
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -21,14 +21,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }))
 
-  // Blog excluido del sitemap hasta que tenga posts publicados
-  const publishedPosts = posts.filter((p) => p.published)
-  const blogRoutes: MetadataRoute.Sitemap = publishedPosts.map((p) => ({
-    url: `${base}/noticias/${p.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly",
-    priority: 0.5,
-  }))
+  let blogRoutes: MetadataRoute.Sitemap = []
+  try {
+    const posts = await listPublishedNews()
+    blogRoutes = posts.map((p) => ({
+      url: `${base}/noticias/${p.slug}`,
+      lastModified: new Date(p.updated_at || p.published_at || p.created_at),
+      changeFrequency: "weekly",
+      priority: 0.5,
+    }))
+  } catch {
+    blogRoutes = []
+  }
 
   return [...staticRoutes, ...proyectoRoutes, ...blogRoutes]
 }

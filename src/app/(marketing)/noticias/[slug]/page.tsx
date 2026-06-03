@@ -1,67 +1,97 @@
-import { notFound } from "next/navigation"
-import Link from "next/link"
-import { posts } from "@/data/blog"
 import type { Metadata } from "next"
+import Image from "next/image"
+import Link from "next/link"
+import { notFound } from "next/navigation"
+import { getPublishedNewsBySlug, listPublishedNews } from "@/lib/news.server"
+import { formatNewsDate, NEWS_DEFAULT_COVER } from "@/lib/news"
 
 interface Props {
   params: Promise<{ slug: string }>
 }
 
 export async function generateStaticParams() {
-  return posts.filter((p) => p.published).map((p) => ({ slug: p.slug }))
+  try {
+    const posts = await listPublishedNews()
+    return posts.map((post) => ({ slug: post.slug }))
+  } catch {
+    return []
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const post = posts.find((p) => p.slug === slug && p.published)
+  let post = null
+
+  try {
+    post = await getPublishedNewsBySlug(slug)
+  } catch {
+    post = null
+  }
+
   if (!post) return {}
   return {
     title: `${post.title} | SIDEAS Consultores`,
-    description: post.shortDescription,
-    robots: { index: false },
+    description: post.excerpt ?? undefined,
   }
 }
 
+export const dynamic = "force-dynamic"
+
 export default async function NoticiaDetalle({ params }: Props) {
   const { slug } = await params
-  const post = posts.find((p) => p.slug === slug && p.published)
+  let post = null
+
+  try {
+    post = await getPublishedNewsBySlug(slug)
+  } catch {
+    post = null
+  }
+
   if (!post) notFound()
 
+  const cover = post.cover_image_url || NEWS_DEFAULT_COVER
+
   return (
-    <main className="min-h-screen py-24" style={{ background: "#F8FAFC" }}>
-      <div className="mx-auto max-w-3xl px-6 lg:px-8">
-        <div className="mb-6 flex items-center gap-3">
-          <span className="rounded-full px-4 py-1 text-xs font-medium" style={{ background: "#4398FF", color: "#fff" }}>
+    <main className="bg-[#f8fafc] py-24">
+      <article className="mx-auto max-w-4xl px-6 lg:px-8">
+        <div className="mb-8 flex flex-wrap items-center gap-3">
+          <span className="rounded-full bg-[#0B3C78] px-4 py-1 text-xs font-bold uppercase tracking-[0.24em] text-white">
             {post.category}
           </span>
-          <span className="text-xs" style={{ color: "#64748B" }}>{post.date}</span>
+          <span className="text-sm text-slate-500">{formatNewsDate(post.published_at)}</span>
+          <span className="text-sm text-slate-500">{post.author_name || "SIDEAS Consultores"}</span>
         </div>
 
-        <h1 className="text-3xl font-bold mb-6 sm:text-4xl" style={{ color: "#0F172A" }}>
+        <div className="relative mb-10 aspect-[16/9] overflow-hidden rounded-[32px] border border-slate-200 bg-slate-100 shadow-[0_20px_60px_rgba(15,23,42,0.12)]">
+          <Image src={cover} alt={post.title} fill className="object-cover" unoptimized />
+        </div>
+
+        <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">
           {post.title}
         </h1>
 
-        <p className="text-lg leading-relaxed mb-10" style={{ color: "#64748B" }}>
-          {post.shortDescription}
-        </p>
-
-        <div className="prose prose-slate max-w-none mb-12">
-          <p className="text-base leading-relaxed" style={{ color: "#64748B" }}>
-            {post.content}
+        {post.excerpt ? (
+          <p className="mt-6 max-w-3xl text-xl leading-8 text-slate-600">
+            {post.excerpt}
           </p>
+        ) : null}
+
+        <div className="prose prose-slate mt-10 max-w-none prose-p:leading-8 prose-headings:tracking-tight prose-a:text-[#0B3C78]">
+          <div className="whitespace-pre-line rounded-[28px] border border-slate-200 bg-white p-8 text-[17px] leading-8 text-slate-700 shadow-sm">
+            {post.content}
+          </div>
         </div>
 
-        <Link
-          href="/noticias"
-          className="inline-flex items-center gap-2 text-sm font-semibold transition hover:opacity-70"
-          style={{ color: "#4398FF" }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-          </svg>
-          Volver a Noticias
-        </Link>
-      </div>
+        <div className="mt-12 flex items-center justify-between gap-4 border-t border-slate-200 pt-8">
+          <Link
+            href="/noticias"
+            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-900 shadow-sm transition-colors hover:border-[#4398FF] hover:text-[#0B3C78]"
+          >
+            Volver a Noticias
+          </Link>
+          <span className="text-sm text-slate-500">Publicación desde el CMS privado de SIDEAS</span>
+        </div>
+      </article>
     </main>
   )
 }
