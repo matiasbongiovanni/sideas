@@ -1,12 +1,14 @@
 // Login programático a OCS Inventory NG.
-// Defaults calibrados para OCS Inventory NG 2.x (LOGIN_ID / LOGIN_PASSWD / index.php).
-// Sobrescribibles por env si la instalación difiere.
+// Calibrado para OCS Inventory NG 2.x con Cloudflare.
 //
 // Env vars:
-//   IMS_LOGIN_PATH       — ruta del form login   (default: /index.php)
-//   IMS_USER_FIELD       — campo de usuario        (default: LOGIN_ID)
-//   IMS_PASS_FIELD       — campo de password       (default: LOGIN_PASSWD)
-//   IMS_CSRF_SELECTOR    — regex para extraer CSRF (OCS no usa CSRF por defecto)
+//   IMS_LOGIN_PATH       — ruta del form login        (default: /ocsreports/index.php)
+//   IMS_USER_FIELD       — campo de usuario            (default: LOGIN)
+//   IMS_PASS_FIELD       — campo de password           (default: PASSWD)
+//   IMS_SUBMIT_FIELD     — campo submit del form       (default: Valid_CNX)
+//   IMS_SUBMIT_VALUE     — valor del campo submit      (default: Send)
+//   IMS_CSRF_FIELD       — nombre del campo CSRF       (default: autodetect)
+//   IMS_CSRF_SELECTOR    — regex para extraer CSRF     (default: patrón OCS CSRF_0)
 
 export class InventoryAuthError extends Error {
   constructor(
@@ -22,10 +24,20 @@ function getCsrfRegexes(): RegExp[] {
   const custom = process.env.IMS_CSRF_SELECTOR
   if (custom) return [new RegExp(custom)]
   return [
+    // OCS Inventory NG: <input type='hidden' name='CSRF_0' ... value='abc123'>
+    /name="CSRF_\d+"[^>]*value="([^"]+)"/,
+    /name='CSRF_\d+'[^>]*value='([^']+)'/,
     /name="_token"\s+value="([^"]+)"/,
     /name="csrf_token"\s+value="([^"]+)"/,
     /<meta\s+name="csrf-token"\s+content="([^"]+)"/,
   ]
+}
+
+function getCsrfFieldName(html: string): string {
+  const custom = process.env.IMS_CSRF_FIELD
+  if (custom) return custom
+  const match = html.match(/name="(CSRF_\d+)"/)
+  return match?.[1] ?? "_token"
 }
 
 function extractCsrfToken(html: string): string | null {
@@ -43,9 +55,11 @@ function extractCookies(res: Response): string {
 }
 
 export async function loginInventory(baseUrl: string, user: string, pass: string): Promise<string> {
-  const loginPath = process.env.IMS_LOGIN_PATH ?? "/login"
-  const userField = process.env.IMS_USER_FIELD ?? "username"
-  const passField = process.env.IMS_PASS_FIELD ?? "password"
+  const loginPath = process.env.IMS_LOGIN_PATH ?? "/ocsreports/index.php"
+  const userField = process.env.IMS_USER_FIELD ?? "LOGIN"
+  const passField = process.env.IMS_PASS_FIELD ?? "PASSWD"
+  const submitField = process.env.IMS_SUBMIT_FIELD ?? "Valid_CNX"
+  const submitValue = process.env.IMS_SUBMIT_VALUE ?? "Send"
 
   const loginUrl = `${baseUrl}${loginPath}`
 
@@ -60,10 +74,11 @@ export async function loginInventory(baseUrl: string, user: string, pass: string
   const initialCookie = extractCookies(getRes)
   const html = await getRes.text().catch(() => "")
   const csrfToken = extractCsrfToken(html)
+  const csrfField = getCsrfFieldName(html)
 
   // Paso 2: POST credenciales
-  const body = new URLSearchParams({ [userField]: user, [passField]: pass })
-  if (csrfToken) body.set("_token", csrfToken)
+  const body = new URLSearchParams({ [userField]: user, [passField]: pass, [submitField]: submitValue })
+  if (csrfToken) body.set(csrfField, csrfToken)
 
   let postRes: Response
   try {
