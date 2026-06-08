@@ -4,17 +4,17 @@ import Image from "next/image"
 import Marquee from "react-fast-marquee"
 import { clientes } from "@/data/clientes"
 
-function ClienteLogo({ name, logo }: { name: string; logo: string | null }) {
+function ClienteLogo({ name, logo, wide }: { name: string; logo: string | null; wide?: boolean }) {
   if (!logo) return null
   return (
     <div className="mx-8 md:mx-12 flex items-center justify-center px-4">
-      <div className="relative w-[280px] h-[100px]">
+      <div className={`relative ${wide ? "w-[380px] h-[130px]" : "w-[280px] h-[100px]"}`}>
         <Image
           src={logo}
           alt={name}
           fill
           className="object-contain filter grayscale invert opacity-60"
-          sizes="160px"
+          sizes={wide ? "220px" : "160px"}
         />
       </div>
     </div>
@@ -47,7 +47,7 @@ export default function ClientesGrid() {
 
         <Marquee gradient={false} speed={35} pauseOnHover autoFill>
           {clientes.map((cliente) => (
-            <ClienteLogo key={cliente.id} name={cliente.name} logo={cliente.logo} />
+            <ClienteLogo key={cliente.id} name={cliente.name} logo={cliente.logo} wide={cliente.wide} />
           ))}
         </Marquee>
       </div>

@@ -20,7 +20,7 @@ export const NEWS_CATEGORIES = [
   "Ciberseguridad",
   "Automatización",
   "Cloud",
-  "Cultura",
+  "Educación",
   "Blog",
 ] as const
 

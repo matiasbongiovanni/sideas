@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import AdminSidebar from "@/components/admin/AdminSidebar"
+import { getUser } from "@/lib/supabase/actions"
 
 export const metadata: Metadata = {
   title: {
@@ -9,11 +10,13 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-export default function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const user = await getUser()
+
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
       <div className="flex min-h-screen">
-        <AdminSidebar />
+        <AdminSidebar user={user} />
         <main className="flex min-h-screen flex-1 flex-col">
           <div className="border-b border-slate-200 bg-white px-6 py-5 shadow-sm lg:px-10">
             <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">

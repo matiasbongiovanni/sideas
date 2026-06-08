@@ -1,12 +1,12 @@
-// Login programático al IMS (inventario).
-// Los campos son configurables por env para adaptarse al software real
-// (Snipe-IT / GLPI / otro) una vez que el dominio esté activo.
+// Login programático a OCS Inventory NG.
+// Defaults calibrados para OCS Inventory NG 2.x (LOGIN_ID / LOGIN_PASSWD / index.php).
+// Sobrescribibles por env si la instalación difiere.
 //
 // Env vars:
-//   IMS_LOGIN_PATH       — ruta del form login   (default: /login)
-//   IMS_USER_FIELD       — campo de usuario        (default: username)
-//   IMS_PASS_FIELD       — campo de password       (default: password)
-//   IMS_CSRF_SELECTOR    — regex para extraer CSRF (default: busca _token y csrf_token)
+//   IMS_LOGIN_PATH       — ruta del form login   (default: /index.php)
+//   IMS_USER_FIELD       — campo de usuario        (default: LOGIN_ID)
+//   IMS_PASS_FIELD       — campo de password       (default: LOGIN_PASSWD)
+//   IMS_CSRF_SELECTOR    — regex para extraer CSRF (OCS no usa CSRF por defecto)
 
 export class InventoryAuthError extends Error {
   constructor(

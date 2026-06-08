@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Calendar, Edit3, ImageIcon, Plus, RefreshCw, Search, Save, Sparkles, Trash2 } from "lucide-react"
+import { Calendar, Edit3, Plus, RefreshCw, Search, Save, Sparkles, Trash2 } from "lucide-react"
 import type { NewsPost, NewsStatus } from "@/lib/news"
 import { NEWS_CATEGORIES, NEWS_DEFAULT_COVER, formatNewsDateTime, getExcerpt, slugify, toDateTimeLocal } from "@/lib/news"
+import ImageUploader from "@/components/admin/ImageUploader"
 
 type Draft = {
   title: string
@@ -439,27 +440,13 @@ export default function NewsManager({ initialPosts }: { initialPosts: NewsPost[]
               />
             </label>
 
-            <label className="block">
+            <div className="block">
               <span className="mb-2 block text-xs font-bold uppercase tracking-[0.22em] text-slate-500">Portada</span>
-              <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
-                <div className="mb-3 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EEF4FF] text-[#0B3C78]">
-                    <ImageIcon className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-slate-900">URL de imagen</p>
-                    <p className="text-xs text-slate-500">Si no cargás una URL, se usa una portada por defecto.</p>
-                  </div>
-                </div>
-                <input
-                  value={draft.cover_image_url}
-                  onChange={(e) => setDraft((current) => ({ ...current, cover_image_url: e.target.value }))}
-                  type="url"
-                  placeholder={NEWS_DEFAULT_COVER}
-                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-[#4398FF] focus:ring-4 focus:ring-[#4398FF]/10"
-                />
-              </div>
-            </label>
+              <ImageUploader
+                value={draft.cover_image_url}
+                onChange={(url) => setDraft((current) => ({ ...current, cover_image_url: url }))}
+              />
+            </div>
 
             <label className="block">
               <span className="mb-2 block text-xs font-bold uppercase tracking-[0.22em] text-slate-500">Fecha de publicación</span>
@@ -479,9 +466,8 @@ export default function NewsManager({ initialPosts }: { initialPosts: NewsPost[]
               <textarea
                 value={draft.content}
                 onChange={(e) => setDraft((current) => ({ ...current, content: e.target.value }))}
-                rows={12}
                 placeholder="Contenido completo de la noticia o blog"
-                className="w-full rounded-[28px] border border-slate-200 bg-white px-4 py-4 text-sm leading-7 text-slate-900 outline-none shadow-sm placeholder:text-slate-400 focus:border-[#4398FF] focus:ring-4 focus:ring-[#4398FF]/10"
+                className="w-full min-h-[calc(100vh-480px)] resize-y rounded-[28px] border border-slate-200 bg-white px-4 py-4 text-sm leading-7 text-slate-900 outline-none shadow-sm placeholder:text-slate-400 focus:border-[#4398FF] focus:ring-4 focus:ring-[#4398FF]/10"
               />
             </label>
 

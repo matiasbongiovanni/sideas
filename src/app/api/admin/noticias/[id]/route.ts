@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { isAdminEmail } from "@/lib/admin"
 import { requireAdminSession, deleteNewsPost, updateNewsPost } from "@/lib/news.server"
 
+export const maxDuration = 30
+
 async function assertAdmin() {
   const session = await requireAdminSession()
   if (!session || !isAdminEmail(session.user.email)) return null

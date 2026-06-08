@@ -4,6 +4,8 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { getPublishedNewsBySlug, listPublishedNews } from "@/lib/news.server"
 import { formatNewsDate, NEWS_DEFAULT_COVER } from "@/lib/news"
+import type { NewsPost } from "@/lib/news"
+import NewsCard from "@/features/blog/components/NewsCard"
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -51,9 +53,27 @@ export default async function NoticiaDetalle({ params }: Props) {
 
   const cover = post.cover_image_url || NEWS_DEFAULT_COVER
 
+  // Artículos relacionados
+  let related: NewsPost[] = []
+  try {
+    const all = await listPublishedNews(4)
+    related = all.filter((p) => p.id !== post.id).slice(0, 3)
+  } catch {
+    related = []
+  }
+
   return (
     <main className="bg-[#f8fafc] pt-28 pb-24">
       <article className="mx-auto max-w-4xl px-6 lg:px-8">
+        {/* Breadcrumb */}
+        <nav className="mb-8 flex items-center gap-2 text-sm text-slate-500 flex-wrap">
+          <Link href="/" className="hover:text-[#0B3C78] transition-colors">Inicio</Link>
+          <span>/</span>
+          <Link href="/noticias" className="hover:text-[#0B3C78] transition-colors">Noticias</Link>
+          <span>/</span>
+          <span className="text-slate-900 font-medium truncate max-w-[200px]">{post.title}</span>
+        </nav>
+
         <div className="mb-8 flex flex-wrap items-center gap-3">
           <span className="rounded-full bg-[#0B3C78] px-4 py-1 text-xs font-bold uppercase tracking-[0.24em] text-white">
             {post.category}
@@ -82,16 +102,29 @@ export default async function NoticiaDetalle({ params }: Props) {
           </div>
         </div>
 
-        <div className="mt-12 flex items-center justify-between gap-4 border-t border-slate-200 pt-8">
+        <div className="mt-12 border-t border-slate-200 pt-8">
           <Link
             href="/noticias"
-            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-900 shadow-sm transition-colors hover:border-[#4398FF] hover:text-[#0B3C78]"
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#0B3C78] to-[#4398FF] px-6 py-3 text-sm font-bold text-white shadow-lg hover:brightness-110 transition-all"
           >
-            Volver a Noticias
+            ← Volver a Noticias
           </Link>
-          <span className="text-sm text-slate-500">Publicación desde el CMS privado de SIDEAS</span>
         </div>
       </article>
+
+      {/* Artículos relacionados */}
+      {related.length >= 2 && (
+        <section className="mx-auto max-w-7xl px-6 lg:px-8 mt-20 pt-12 border-t border-slate-200">
+          <h2 className="mb-8 text-xs font-bold uppercase tracking-[0.35em] text-slate-400">
+            Más artículos
+          </h2>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {related.map((p) => (
+              <NewsCard key={p.id} post={p} />
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   )
 }

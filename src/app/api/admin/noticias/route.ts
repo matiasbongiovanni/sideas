@@ -3,6 +3,8 @@ import { requireAdminSession } from "@/lib/news.server"
 import { createNewsPost, listAdminNews } from "@/lib/news.server"
 import { isAdminEmail } from "@/lib/admin"
 
+export const maxDuration = 30
+
 async function assertAdmin() {
   const session = await requireAdminSession()
   if (!session || !isAdminEmail(session.user.email)) return null
