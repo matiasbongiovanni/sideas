@@ -52,17 +52,17 @@ export default function Login() {
           </div>
 
           <form action={formAction} className="space-y-6">
-            {/* Input Email */}
+            {/* Input Usuario */}
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-medium text-slate-900">
-                Email
+              <label htmlFor="username" className="block text-sm font-medium text-slate-900">
+                Usuario
               </label>
               <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                placeholder="Email@ejemplo.com"
+                id="username"
+                name="username"
+                type="text"
+                autoComplete="username"
+                placeholder="Tu usuario (ej. cmaria)"
                 required
                 className="w-full rounded-2xl border border-slate-200 bg-white px-5 py-4 text-sm text-slate-900 outline-none transition-all focus:border-[#4398FF] focus:ring-4 focus:ring-[#4398FF]/10 placeholder:text-slate-400 shadow-sm shadow-slate-100"
               />
@@ -82,15 +82,6 @@ export default function Login() {
                 required
                 className="w-full rounded-2xl border border-slate-200 bg-white px-5 py-4 text-sm text-slate-900 outline-none transition-all focus:border-[#4398FF] focus:ring-4 focus:ring-[#4398FF]/10 placeholder:text-slate-400 shadow-sm shadow-slate-100"
               />
-
-              <div className="flex justify-end pt-1">
-                <Link
-                  href="/recuperar-contraseña"
-                  className="text-xs font-medium text-slate-500 underline decoration-slate-300 hover:text-[#4398FF] hover:decoration-[#4398FF] transition-colors"
-                >
-                  Olvidé mi contraseña
-                </Link>
-              </div>
             </div>
 
             {/* Error message */}

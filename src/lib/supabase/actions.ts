@@ -5,16 +5,26 @@ import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { isAdminEmail } from "@/lib/admin"
 
+const PORTAL_EMAIL_DOMAIN = process.env.PORTAL_EMAIL_DOMAIN || "portal.sideasconsultores.com.ar"
+
+function resolvePortalEmail(input: string): string {
+    const trimmed = input.trim().toLowerCase()
+    if (trimmed.includes("@")) return trimmed
+    return `${trimmed}@${PORTAL_EMAIL_DOMAIN}`
+}
+
 export async function login(prevState: { error: string | null }, formData: FormData) {
     const supabase = await createClient()
 
-    const { error } = await supabase.auth.signInWithPassword({
-        email: formData.get("email") as string,
-        password: formData.get("password") as string,
-    })
+    // Acepta tanto campo "username" (portal) como "email" (compat legacy)
+    const rawInput = (formData.get("username") || formData.get("email")) as string
+    const email = resolvePortalEmail(rawInput)
+    const password = formData.get("password") as string
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
-        return { error: "Credenciales incorrectas. Verificá tu email y contraseña." }
+        return { error: "Credenciales incorrectas. Verificá tu usuario y contraseña." }
     }
 
     revalidatePath("/", "layout")
