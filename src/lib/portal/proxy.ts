@@ -91,26 +91,34 @@ function rewriteSetCookie(raw: string, portalType: string): string {
 
 function patchHtml(html: string, endpoint: PortalEndpoint): string {
   const portalPath = `/portal/${endpoint.type}`
-  // Extract the upstream subpath (e.g. "/ocsreports" from the base_url)
   const upstreamSubpath = new URL(endpoint.base_url).pathname.replace(/\/$/, "")
 
   let out = html
 
-  // 1. Replace full origin references: https://upstream-host/subpath → /portal/type
   try {
     const origin = new URL(endpoint.base_url).origin
-    out = out.split(`${origin}${upstreamSubpath}`).join(portalPath)
-    out = out.split(origin).join("")
+
+    // 1. Replace full origin+subpath references first (most specific)
+    if (upstreamSubpath) {
+      out = out.split(`${origin}${upstreamSubpath}`).join(portalPath)
+    }
+
+    // 2. Replace remaining origin+slash references — preserves the path
+    //    e.g. src="http://host:port/js/app.js" → src="/portal/type/js/app.js"
+    out = out.split(`${origin}/`).join(`${portalPath}/`)
+
+    // 3. Bare origin without trailing slash (href="http://host:port")
+    out = out.replace(new RegExp(origin.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?=[\"' ])", "g"), portalPath)
   } catch { /* ignore */ }
 
-  // 2. Replace absolute subpath references: /ocsreports/ → /portal/type/
+  // 4. Replace absolute subpath references: /ocsreports/ → /portal/type/
   if (upstreamSubpath) {
     out = out.split(`${upstreamSubpath}/`).join(`${portalPath}/`)
     out = out.split(`${upstreamSubpath}"`).join(`${portalPath}"`)
     out = out.split(`${upstreamSubpath}'`).join(`${portalPath}'`)
   }
 
-  // 3. Inject base tag for remaining relative paths
+  // 5. Inject <base> tag for remaining relative paths
   const base = `<base href="${portalPath}/">`
   out = out.replace(/(<head[^>]*>)/i, `$1${base}`)
 
@@ -133,9 +141,8 @@ export async function proxyRequest({
   userId: string | null
   cred: PortalCredential | null
 }): Promise<Response> {
-  const targetUrl = `${endpoint.base_url}${upstreamPath}${
-    request.url.includes("?") ? "?" + request.url.split("?")[1] : ""
-  }`
+  const reqUrl = new URL(request.url)
+  const targetUrl = `${endpoint.base_url}${upstreamPath}${reqUrl.search}`
 
   // Forward headers (strip hop-by-hop + host)
   const forwardHeaders: Record<string, string> = {}

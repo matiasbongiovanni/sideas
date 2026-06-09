@@ -36,7 +36,10 @@ export default async function ZabbixPage() {
         </header>
 
         <div className="flex-1 p-6 overflow-hidden">
-          <PortalFrame src="/portal/zabbix" title={endpoint.label} />
+          <PortalFrame
+            src="/portal/zabbix/zabbix.php?action=dashboard.view&kiosk=1"
+            title={endpoint.label}
+          />
         </div>
       </main>
     </div>
