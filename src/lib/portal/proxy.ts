@@ -2,7 +2,7 @@ import { loginZabbix } from "@/lib/portal/zabbix-auth"
 import { loginInventory } from "@/lib/portal/inventory-auth"
 import type { PortalEndpoint, PortalCredential } from "@/lib/portal/queries"
 
-// ── Session cache ────────────────────────────────────────────────────────────
+// ── Session cache (in-memory, best-effort — browser cookie is authoritative) ──
 const SESSION_TTL_MS =
   (parseInt(process.env.PORTAL_SESSION_TTL ?? "1200", 10)) * 1000
 
@@ -16,10 +16,7 @@ function cacheKey(endpointId: string, userId: string | null): string {
 function getCachedCookie(key: string): string | null {
   const entry = sessionCache.get(key)
   if (!entry) return null
-  if (Date.now() > entry.expiresAt) {
-    sessionCache.delete(key)
-    return null
-  }
+  if (Date.now() > entry.expiresAt) { sessionCache.delete(key); return null }
   return entry.cookie
 }
 
@@ -27,19 +24,13 @@ function setCachedCookie(key: string, cookie: string) {
   sessionCache.set(key, { cookie, expiresAt: Date.now() + SESSION_TTL_MS })
 }
 
-function invalidateCache(key: string) {
-  sessionCache.delete(key)
-}
+function invalidateCache(key: string) { sessionCache.delete(key) }
 
-// ── Auth upstream ────────────────────────────────────────────────────────────
-async function loginUpstream(
-  endpoint: PortalEndpoint,
-  cred: PortalCredential
-): Promise<string> {
-  if (endpoint.type === "zabbix") {
-    return loginZabbix(endpoint.base_url, cred.username, cred.password)
-  }
-  return loginInventory(endpoint.base_url, cred.username, cred.password)
+// ── Auth upstream ─────────────────────────────────────────────────────────────
+async function loginUpstream(endpoint: PortalEndpoint, cred: PortalCredential): Promise<string> {
+  return endpoint.type === "zabbix"
+    ? loginZabbix(endpoint.base_url, cred.username, cred.password)
+    : loginInventory(endpoint.base_url, cred.username, cred.password)
 }
 
 export async function getUpstreamCookie(
@@ -48,38 +39,23 @@ export async function getUpstreamCookie(
   cred: PortalCredential | null
 ): Promise<string | null> {
   if (endpoint.auth_mode === "none" || !cred) return null
-
   const key = cacheKey(endpoint.id, userId)
   const cached = getCachedCookie(key)
   if (cached) return cached
-
   const cookie = await loginUpstream(endpoint, cred)
   setCachedCookie(key, cookie)
   return cookie
 }
 
-// ── Headers to strip/rewrite ─────────────────────────────────────────────────
+// ── Headers ───────────────────────────────────────────────────────────────────
 const STRIP_RESPONSE_HEADERS = new Set([
-  "x-frame-options",
-  "strict-transport-security",
-  "content-security-policy",
-  "x-content-type-options",
-  // Stripped for HTML responses since we decompress+modify the body
-  "content-encoding",
-  "content-length",
-  "transfer-encoding",
+  "x-frame-options", "strict-transport-security", "content-security-policy",
+  "x-content-type-options", "content-encoding", "content-length", "transfer-encoding",
 ])
 
 const STRIP_REQUEST_HEADERS = new Set([
-  "host",
-  "connection",
-  "keep-alive",
-  "upgrade",
-  "te",
-  "trailers",
-  "transfer-encoding",
-  // Force uncompressed response so the proxy can read and modify HTML
-  "accept-encoding",
+  "host", "connection", "keep-alive", "upgrade", "te", "trailers",
+  "transfer-encoding", "accept-encoding",
 ])
 
 function rewriteSetCookie(raw: string, portalType: string): string {
@@ -89,43 +65,66 @@ function rewriteSetCookie(raw: string, portalType: string): string {
     .replace(/SameSite=[^;]*/gi, "SameSite=Lax")
 }
 
-function patchHtml(html: string, endpoint: PortalEndpoint): string {
+// ── HTML patching ─────────────────────────────────────────────────────────────
+function isLoginPage(html: string): boolean {
+  return html.includes('name="enter"') &&
+         html.includes('id="password"') &&
+         html.includes('action="index.php"')
+}
+
+function injectAutoLogin(html: string, cred: PortalCredential): string {
+  // Hide the form while it auto-submits to avoid a flash of the login UI
+  const style = `<style>.signin-container,.wrapper{opacity:0!important}</style>`
+  const script = `<script>
+(function(){
+  var u=${JSON.stringify(cred.username)},p=${JSON.stringify(cred.password)};
+  function go(){
+    var n=document.getElementById("name");
+    var pw=document.getElementById("password");
+    var btn=document.querySelector('button[name="enter"]');
+    if(n&&pw&&btn){n.value=u;pw.value=p;btn.click();}
+    else{setTimeout(go,50);}
+  }
+  if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",go);}
+  else{go();}
+})();
+</script>`
+  return html
+    .replace(/(<head[^>]*>)/i, `$1${style}`)
+    .replace("</body>", script + "</body>")
+}
+
+function patchHtml(html: string, endpoint: PortalEndpoint, cred?: PortalCredential | null): string {
   const portalPath = `/portal/${endpoint.type}`
   const upstreamSubpath = new URL(endpoint.base_url).pathname.replace(/\/$/, "")
 
   let out = html
 
+  // Auto-login injection: if Zabbix returned the login page, auto-submit credentials
+  if (cred && isLoginPage(out)) {
+    out = injectAutoLogin(out, cred)
+  }
+
   try {
     const origin = new URL(endpoint.base_url).origin
-
-    // 1. Replace full origin+subpath references first (most specific)
-    if (upstreamSubpath) {
-      out = out.split(`${origin}${upstreamSubpath}`).join(portalPath)
-    }
-
-    // 2. Replace remaining origin+slash references — preserves the path
-    //    e.g. src="http://host:port/js/app.js" → src="/portal/type/js/app.js"
+    if (upstreamSubpath) out = out.split(`${origin}${upstreamSubpath}`).join(portalPath)
     out = out.split(`${origin}/`).join(`${portalPath}/`)
-
-    // 3. Bare origin without trailing slash (href="http://host:port")
     out = out.replace(new RegExp(origin.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?=[\"' ])", "g"), portalPath)
   } catch { /* ignore */ }
 
-  // 4. Replace absolute subpath references: /ocsreports/ → /portal/type/
   if (upstreamSubpath) {
     out = out.split(`${upstreamSubpath}/`).join(`${portalPath}/`)
     out = out.split(`${upstreamSubpath}"`).join(`${portalPath}"`)
     out = out.split(`${upstreamSubpath}'`).join(`${portalPath}'`)
   }
 
-  // 5. Inject <base> tag for remaining relative paths
   const base = `<base href="${portalPath}/">`
   out = out.replace(/(<head[^>]*>)/i, `$1${base}`)
 
   return out
 }
 
-// ── Main proxy ───────────────────────────────────────────────────────────────
+// ── Main proxy ────────────────────────────────────────────────────────────────
 export async function proxyRequest({
   endpoint,
   upstreamPath,
@@ -144,7 +143,7 @@ export async function proxyRequest({
   const reqUrl = new URL(request.url)
   const targetUrl = `${endpoint.base_url}${upstreamPath}${reqUrl.search}`
 
-  // Forward headers (strip hop-by-hop + host)
+  // Build forward headers
   const forwardHeaders: Record<string, string> = {}
   request.headers.forEach((value, key) => {
     if (!STRIP_REQUEST_HEADERS.has(key.toLowerCase())) {
@@ -152,7 +151,19 @@ export async function proxyRequest({
     }
   })
   forwardHeaders["accept-encoding"] = "identity"
-  if (cookie) forwardHeaders["cookie"] = cookie
+
+  // Cookie strategy:
+  // - If the browser already has a session cookie for this portal, prefer it.
+  //   It was set on a previous authenticated request and is stored at the right path.
+  // - Only fall back to server-side login cookie when the browser has none.
+  const browserCookies = request.headers.get("cookie") ?? ""
+  const sessionCookieName = endpoint.type === "zabbix" ? "zbx_session" : "PHPSESSID"
+  const browserHasSession = browserCookies.includes(`${sessionCookieName}=`)
+
+  if (!browserHasSession && cookie) {
+    forwardHeaders["cookie"] = cookie
+  }
+  // else: browser cookies already in forwardHeaders from forEach above
 
   const fetchOptions: RequestInit = {
     method: request.method,
@@ -173,12 +184,11 @@ export async function proxyRequest({
     })
   }
 
-  // Si upstream devuelve 401 o redirige al login → re-autenticar una vez
+  // 401 or redirect-to-login → invalidate cache and retry once with fresh session
+  const location = upstreamRes.headers.get("location") ?? ""
   const isAuthFailure =
     upstreamRes.status === 401 ||
-    (upstreamRes.status >= 300 &&
-      upstreamRes.status < 400 &&
-      (upstreamRes.headers.get("location") ?? "").includes("login"))
+    (upstreamRes.status >= 300 && upstreamRes.status < 400 && location.includes("login"))
 
   if (isAuthFailure && cred && userId !== undefined) {
     const key = cacheKey(endpoint.id, userId)
@@ -188,12 +198,10 @@ export async function proxyRequest({
       setCachedCookie(key, newCookie)
       forwardHeaders["cookie"] = newCookie
       upstreamRes = await fetch(targetUrl, { ...fetchOptions, headers: forwardHeaders })
-    } catch {
-      // Re-auth falló — devolver la respuesta original
-    }
+    } catch { /* serve original response */ }
   }
 
-  // Construir headers de respuesta
+  // Build response headers
   const responseHeaders = new Headers()
   upstreamRes.headers.forEach((value, key) => {
     const lower = key.toLowerCase()
@@ -205,12 +213,25 @@ export async function proxyRequest({
     responseHeaders.set(key, value)
   })
 
+  // If we used a server-side login cookie and the upstream didn't send Set-Cookie
+  // (session already valid), inject it so the browser stores it for future requests.
+  if (!browserHasSession && cookie && endpoint.type === "zabbix") {
+    const zbxPart = cookie.split("; ").find(c => c.startsWith("zbx_session="))
+    if (zbxPart) {
+      const alreadySet = responseHeaders.getSetCookie?.().some(c => c.startsWith("zbx_session="))
+      if (!alreadySet) {
+        responseHeaders.append("set-cookie",
+          `${zbxPart}; Path=/portal/${endpoint.type}; SameSite=Lax; HttpOnly`)
+      }
+    }
+  }
+
   const contentType = upstreamRes.headers.get("content-type") ?? ""
   const isHtml = contentType.includes("text/html")
 
   if (isHtml) {
     const html = await upstreamRes.text()
-    const patched = patchHtml(html, endpoint)
+    const patched = patchHtml(html, endpoint, cred)
     return new Response(patched, { status: upstreamRes.status, headers: responseHeaders })
   }
 
