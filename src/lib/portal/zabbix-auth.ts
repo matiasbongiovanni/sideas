@@ -20,12 +20,16 @@ export async function loginZabbix(baseUrl: string, user: string, pass: string): 
       headers: { Accept: "text/html" },
       redirect: "follow",
     })
+    console.log("[zabbix-auth] GET", loginUrl, "status:", getRes.status)
     const html = await getRes.text()
     const csrfMatch = html.match(/name="_csrf_token"\s+value="([^"]+)"/)
     csrfToken = csrfMatch?.[1]
+    console.log("[zabbix-auth] csrf token found:", !!csrfToken)
     const initCookies = getRes.headers.getSetCookie?.() ?? []
     initCookieStr = initCookies.map((c) => c.split(";")[0]).join("; ")
-  } catch {
+    console.log("[zabbix-auth] init cookies:", initCookieStr || "(none)")
+  } catch (e) {
+    console.error("[zabbix-auth] GET failed:", e)
     // Continue without CSRF — older Zabbix versions don't require it
   }
 
@@ -51,12 +55,15 @@ export async function loginZabbix(baseUrl: string, user: string, pass: string): 
       body: formData,
       redirect: "manual",
     })
-  } catch {
+  } catch (e) {
+    console.error("[zabbix-auth] POST failed:", e)
     throw new ZabbixAuthError("No se pudo conectar a Zabbix upstream", "upstream_down")
   }
 
   // Zabbix redirige al dashboard con Set-Cookie si el login fue exitoso
   const setCookie = res.headers.getSetCookie?.() ?? []
+  console.log("[zabbix-auth] POST status:", res.status, "location:", res.headers.get("location"))
+  console.log("[zabbix-auth] set-cookie headers:", setCookie)
   const rawCookies = Array.isArray(setCookie) ? setCookie : [setCookie].filter(Boolean)
   const sessionCookies = rawCookies.map((c) => c.split(";")[0].trim())
   const hasSession = sessionCookies.some(
@@ -64,6 +71,7 @@ export async function loginZabbix(baseUrl: string, user: string, pass: string): 
   )
 
   if (!hasSession) {
+    console.error("[zabbix-auth] no session cookie found in POST response. cookies:", sessionCookies)
     throw new ZabbixAuthError("Login a Zabbix fallido: sin cookie de sesión", "invalid_credentials")
   }
 
