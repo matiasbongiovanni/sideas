@@ -82,10 +82,15 @@ export async function loginZabbix(baseUrl: string, user: string, pass: string): 
     throw new ZabbixAuthError("Login a Zabbix fallido: sin cookie de sesión", "invalid_credentials")
   }
 
-  // Combine initial cookies with session cookies so all subsequent requests are valid
-  const allParts = [
-    ...initCookieStr.split("; ").filter(Boolean),
-    ...sessionCookies,
-  ]
-  return [...new Set(allParts)].join("; ")
+  // Merge cookies: POST response cookies override GET cookies with the same name
+  const cookieMap = new Map<string, string>()
+  for (const raw of initCookieStr.split("; ").filter(Boolean)) {
+    const [name] = raw.split("=")
+    cookieMap.set(name, raw)
+  }
+  for (const raw of sessionCookies) {
+    const [name] = raw.split("=")
+    cookieMap.set(name, raw)  // POST result wins over GET result
+  }
+  return [...cookieMap.values()].join("; ")
 }
