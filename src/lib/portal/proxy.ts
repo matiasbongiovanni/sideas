@@ -66,16 +66,26 @@ function rewriteSetCookie(raw: string, portalType: string): string {
 }
 
 // ── HTML patching ─────────────────────────────────────────────────────────────
-function isLoginPage(html: string): boolean {
-  return html.includes('name="enter"') &&
-         html.includes('id="password"') &&
-         html.includes('action="index.php"')
+type PortalType = "zabbix" | "inventario" | string
+
+function isLoginPage(html: string, type: PortalType): boolean {
+  if (type === "zabbix") {
+    return html.includes('name="enter"') &&
+           html.includes('id="password"') &&
+           html.includes('action="index.php"')
+  }
+  if (type === "inventario") {
+    return html.includes('name="LOGIN"') && html.includes('name="PASSWD"')
+  }
+  return false
 }
 
-function injectAutoLogin(html: string, cred: PortalCredential): string {
-  // Hide the form while it auto-submits to avoid a flash of the login UI
-  const style = `<style>.signin-container,.wrapper{opacity:0!important}</style>`
-  const script = `<script>
+function injectAutoLogin(html: string, cred: PortalCredential, type: PortalType): string {
+  const style = `<style>body{opacity:0!important}</style>`
+
+  let script: string
+  if (type === "zabbix") {
+    script = `<script>
 (function(){
   var u=${JSON.stringify(cred.username)},p=${JSON.stringify(cred.password)};
   function go(){
@@ -89,6 +99,24 @@ function injectAutoLogin(html: string, cred: PortalCredential): string {
   else{go();}
 })();
 </script>`
+  } else {
+    // OCS Inventory NG: LOGIN / PASSWD / Valid_CNX submit
+    script = `<script>
+(function(){
+  var u=${JSON.stringify(cred.username)},p=${JSON.stringify(cred.password)};
+  function go(){
+    var n=document.getElementById("LOGIN");
+    var pw=document.getElementById("PASSWD");
+    var btn=document.querySelector('input[name="Valid_CNX"]');
+    if(n&&pw&&btn){n.value=u;pw.value=p;btn.click();}
+    else{setTimeout(go,50);}
+  }
+  if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",go);}
+  else{go();}
+})();
+</script>`
+  }
+
   return html
     .replace(/(<head[^>]*>)/i, `$1${style}`)
     .replace("</body>", script + "</body>")
@@ -100,9 +128,9 @@ function patchHtml(html: string, endpoint: PortalEndpoint, cred?: PortalCredenti
 
   let out = html
 
-  // Auto-login injection: if Zabbix returned the login page, auto-submit credentials
-  if (cred && isLoginPage(out)) {
-    out = injectAutoLogin(out, cred)
+  // Auto-login injection: if upstream returned the login page, auto-submit credentials
+  if (cred && isLoginPage(out, endpoint.type)) {
+    out = injectAutoLogin(out, cred, endpoint.type)
   }
 
   try {

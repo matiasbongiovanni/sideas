@@ -2,7 +2,7 @@
 // Calibrado para OCS Inventory NG 2.x con Cloudflare.
 //
 // Env vars:
-//   IMS_LOGIN_PATH       — ruta del form login        (default: /ocsreports/index.php)
+//   IMS_LOGIN_PATH       — ruta del form login        (default: /index.php, relativa a base_url que incluye /ocsreports)
 //   IMS_USER_FIELD       — campo de usuario            (default: LOGIN)
 //   IMS_PASS_FIELD       — campo de password           (default: PASSWD)
 //   IMS_SUBMIT_FIELD     — campo submit del form       (default: Valid_CNX)
@@ -55,7 +55,8 @@ function extractCookies(res: Response): string {
 }
 
 export async function loginInventory(baseUrl: string, user: string, pass: string): Promise<string> {
-  const loginPath = process.env.IMS_LOGIN_PATH ?? "/ocsreports/index.php"
+  // base_url already includes /ocsreports — login is at /index.php relative to it
+  const loginPath = process.env.IMS_LOGIN_PATH ?? "/index.php"
   const userField = process.env.IMS_USER_FIELD ?? "LOGIN"
   const passField = process.env.IMS_PASS_FIELD ?? "PASSWD"
   const submitField = process.env.IMS_SUBMIT_FIELD ?? "Valid_CNX"
@@ -95,17 +96,32 @@ export async function loginInventory(baseUrl: string, user: string, pass: string
     throw new InventoryAuthError("Error en POST de login al inventario", "upstream_down")
   }
 
-  const sessionCookie = extractCookies(postRes)
-  if (!sessionCookie) {
-    throw new InventoryAuthError("Login al inventario fallido: sin cookie de sesión", "invalid_credentials")
-  }
-
-  // Si el IMS redirige (3xx) tras login exitoso, o devuelve 2xx, aceptamos la cookie
   if (postRes.status >= 400) {
     throw new InventoryAuthError(
       `Login al inventario devolvió ${postRes.status}`,
       "invalid_credentials"
     )
+  }
+
+  // OCS always sets PHPSESSID even on failed login — detect failure by checking
+  // if the response HTML still contains the login form
+  const responseHtml = await postRes.text().catch(() => "")
+  const isStillLoginPage = responseHtml.includes('name="LOGIN"') && responseHtml.includes('name="PASSWD"')
+  if (isStillLoginPage) {
+    throw new InventoryAuthError("Login al inventario fallido: credenciales incorrectas", "invalid_credentials")
+  }
+
+  // Merge: use cookies from both GET and POST so the authenticated session is complete
+  const cookieMap = new Map<string, string>()
+  for (const raw of initialCookie.split("; ").filter(Boolean)) {
+    const [name] = raw.split("="); cookieMap.set(name, raw)
+  }
+  for (const raw of extractCookies(postRes).split("; ").filter(Boolean)) {
+    const [name] = raw.split("="); cookieMap.set(name, raw)
+  }
+  const sessionCookie = [...cookieMap.values()].join("; ")
+  if (!sessionCookie) {
+    throw new InventoryAuthError("Login al inventario fallido: sin cookie de sesión", "invalid_credentials")
   }
 
   return sessionCookie

@@ -51,7 +51,7 @@ const ENDPOINTS = [
   {
     type:      "inventario",
     label:     "Inventario",
-    base_url:  process.env.IMS_BASE_URL || "https://ims.sideasconsultores.com.ar",
+    base_url:  process.env.IMS_BASE_URL || "https://ims.sideasconsultores.com.ar/ocsreports",
     auth_mode: "per_user",
     sort:      0,
   },
