@@ -64,6 +64,10 @@ const STRIP_RESPONSE_HEADERS = new Set([
   "strict-transport-security",
   "content-security-policy",
   "x-content-type-options",
+  // Stripped for HTML responses since we decompress+modify the body
+  "content-encoding",
+  "content-length",
+  "transfer-encoding",
 ])
 
 const STRIP_REQUEST_HEADERS = new Set([
@@ -74,6 +78,8 @@ const STRIP_REQUEST_HEADERS = new Set([
   "te",
   "trailers",
   "transfer-encoding",
+  // Force uncompressed response so the proxy can read and modify HTML
+  "accept-encoding",
 ])
 
 function rewriteSetCookie(raw: string, portalType: string): string {
@@ -83,9 +89,32 @@ function rewriteSetCookie(raw: string, portalType: string): string {
     .replace(/SameSite=[^;]*/gi, "SameSite=Lax")
 }
 
-function injectBaseTag(html: string, portalType: string): string {
-  const base = `<base href="/portal/${portalType}/">`
-  return html.replace(/(<head[^>]*>)/i, `$1${base}`)
+function patchHtml(html: string, endpoint: PortalEndpoint): string {
+  const portalPath = `/portal/${endpoint.type}`
+  // Extract the upstream subpath (e.g. "/ocsreports" from the base_url)
+  const upstreamSubpath = new URL(endpoint.base_url).pathname.replace(/\/$/, "")
+
+  let out = html
+
+  // 1. Replace full origin references: https://upstream-host/subpath → /portal/type
+  try {
+    const origin = new URL(endpoint.base_url).origin
+    out = out.split(`${origin}${upstreamSubpath}`).join(portalPath)
+    out = out.split(origin).join("")
+  } catch { /* ignore */ }
+
+  // 2. Replace absolute subpath references: /ocsreports/ → /portal/type/
+  if (upstreamSubpath) {
+    out = out.split(`${upstreamSubpath}/`).join(`${portalPath}/`)
+    out = out.split(`${upstreamSubpath}"`).join(`${portalPath}"`)
+    out = out.split(`${upstreamSubpath}'`).join(`${portalPath}'`)
+  }
+
+  // 3. Inject base tag for remaining relative paths
+  const base = `<base href="${portalPath}/">`
+  out = out.replace(/(<head[^>]*>)/i, `$1${base}`)
+
+  return out
 }
 
 // ── Main proxy ───────────────────────────────────────────────────────────────
@@ -115,6 +144,7 @@ export async function proxyRequest({
       forwardHeaders[key] = value
     }
   })
+  forwardHeaders["accept-encoding"] = "identity"
   if (cookie) forwardHeaders["cookie"] = cookie
 
   const fetchOptions: RequestInit = {
@@ -173,7 +203,7 @@ export async function proxyRequest({
 
   if (isHtml) {
     const html = await upstreamRes.text()
-    const patched = injectBaseTag(html, endpoint.type)
+    const patched = patchHtml(html, endpoint)
     return new Response(patched, { status: upstreamRes.status, headers: responseHeaders })
   }
 
