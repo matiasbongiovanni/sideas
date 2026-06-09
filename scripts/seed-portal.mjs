@@ -115,8 +115,17 @@ async function upsertEndpoint(clientId, ep) {
   return body[0].id
 }
 
+async function findAuthUserIdByEmail(email) {
+  // /auth/v1/admin/users list may be broken; use generate_link which always returns the user object
+  const { status, body } = await supaFetch("/auth/v1/admin/generate_link", {
+    method: "POST",
+    body: JSON.stringify({ type: "magiclink", email }),
+  })
+  if ((status === 200 || status === 201) && body?.id) return body.id
+  return null
+}
+
 async function getOrCreateAuthUser(email, password) {
-  // Intentar crear
   const { status, body } = await supaFetch("/auth/v1/admin/users", {
     method: "POST",
     body: JSON.stringify({ email, password, email_confirm: true }),
@@ -125,15 +134,12 @@ async function getOrCreateAuthUser(email, password) {
     console.log(`  + Usuario Auth creado: ${email}`)
     return body.id
   }
-  if (status === 422 && body?.msg?.includes("already been registered")) {
-    // Ya existe — buscar por email
-    const { body: list } = await supaFetch(
-      `/auth/v1/admin/users?email=${encodeURIComponent(email)}&per_page=1`
-    )
-    const user = list?.users?.[0]
-    if (user?.id) {
-      console.log(`  ✓ Usuario Auth ya existe: ${email} (${user.id})`)
-      return user.id
+  if (status === 422) {
+    // Ya existe — recuperar ID via generate_link (list endpoint no disponible)
+    const uid = await findAuthUserIdByEmail(email)
+    if (uid) {
+      console.log(`  ✓ Usuario Auth ya existe: ${email} (${uid})`)
+      return uid
     }
   }
   throw new Error(`Error creando usuario Auth ${email}: ${JSON.stringify(body)}`)
@@ -159,18 +165,33 @@ async function upsertProfile(userId, clientId, username, fullName) {
 }
 
 async function upsertCredential(endpointId, userId, username, password) {
+  // Check if exists first (NULL user_id can't use ON CONFLICT)
+  const userFilter = userId ? `user_id=eq.${userId}` : `user_id=is.null`
+  const { body: existing } = await supaFetch(
+    `/rest/v1/portal_credentials?endpoint_id=eq.${endpointId}&${userFilter}&select=id`
+  )
+  const payload = { endpoint_id: endpointId, user_id: userId ?? null, username, password_enc: encryptSecret(password) }
+
+  if (existing?.[0]?.id) {
+    // Update existing
+    const { status, body } = await supaFetch(
+      `/rest/v1/portal_credentials?id=eq.${existing[0].id}`,
+      { method: "PATCH", headers: { Prefer: "return=minimal" }, body: JSON.stringify({ username, password_enc: encryptSecret(password) }) }
+    )
+    if (status === 204 || status === 200) {
+      console.log(`  ✓ Credencial actualizada: endpoint=${endpointId} user=${userId ?? "shared"}`)
+      return
+    }
+    throw new Error(`Error actualizando credencial: ${JSON.stringify(body)}`)
+  }
+
   const { status, body } = await supaFetch("/rest/v1/portal_credentials", {
     method: "POST",
-    headers: { Prefer: "resolution=merge-duplicates,return=representation" },
-    body: JSON.stringify({
-      endpoint_id:  endpointId,
-      user_id:      userId ?? null,
-      username,
-      password_enc: encryptSecret(password),
-    }),
+    headers: { Prefer: "return=minimal" },
+    body: JSON.stringify(payload),
   })
-  if (status === 201 || status === 200) {
-    console.log(`  ✓ Credencial upsert: endpoint=${endpointId} user=${userId ?? "shared"}`)
+  if (status === 201) {
+    console.log(`  ✓ Credencial creada: endpoint=${endpointId} user=${userId ?? "shared"}`)
     return
   }
   throw new Error(`Error upsert credential: ${JSON.stringify(body)}`)
