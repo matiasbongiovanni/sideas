@@ -12,9 +12,21 @@ export function OCSAutoLogin({ action, username, password }: Props) {
   const formRef = useRef<HTMLFormElement>(null)
 
   useEffect(() => {
-    // Slight delay so the iframe is ready
-    const t = setTimeout(() => formRef.current?.submit(), 100)
-    return () => clearTimeout(t)
+    const iframe = document.querySelector('iframe[name="ocs-frame"]') as HTMLIFrameElement | null
+    if (!iframe) return
+
+    const doSubmit = () => {
+      // Small delay so the iframe has time to register the name target
+      setTimeout(() => formRef.current?.submit(), 50)
+    }
+
+    if (iframe.contentDocument?.readyState === "complete") {
+      doSubmit()
+    } else {
+      iframe.addEventListener("load", doSubmit, { once: true })
+    }
+
+    return () => iframe.removeEventListener("load", doSubmit)
   }, [])
 
   return (
