@@ -88,11 +88,13 @@ function injectAutoLogin(html: string, cred: PortalCredential, type: PortalType)
     script = `<script>
 (function(){
   var u=${JSON.stringify(cred.username)},p=${JSON.stringify(cred.password)};
+  // Safety: show page after 4s even if auto-login doesn't fire
+  var t=setTimeout(function(){document.documentElement.style.opacity='1';},4000);
   function go(){
     var n=document.getElementById("name");
     var pw=document.getElementById("password");
     var btn=document.querySelector('button[name="enter"]');
-    if(n&&pw&&btn){n.value=u;pw.value=p;btn.click();}
+    if(n&&pw&&btn){n.value=u;pw.value=p;clearTimeout(t);btn.click();}
     else{setTimeout(go,50);}
   }
   if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",go);}
@@ -104,11 +106,13 @@ function injectAutoLogin(html: string, cred: PortalCredential, type: PortalType)
     script = `<script>
 (function(){
   var u=${JSON.stringify(cred.username)},p=${JSON.stringify(cred.password)};
+  // Safety: show page after 4s even if auto-login doesn't fire
+  var t=setTimeout(function(){document.documentElement.style.opacity='1';},4000);
   function go(){
     var n=document.getElementById("LOGIN");
     var pw=document.getElementById("PASSWD");
     var btn=document.querySelector('input[name="Valid_CNX"]');
-    if(n&&pw&&btn){n.value=u;pw.value=p;btn.click();}
+    if(n&&pw&&btn){n.value=u;pw.value=p;clearTimeout(t);btn.click();}
     else{setTimeout(go,50);}
   }
   if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",go);}
@@ -231,11 +235,24 @@ export async function proxyRequest({
 
   // Build response headers
   const responseHeaders = new Headers()
+  const upstreamOrigin = new URL(endpoint.base_url).origin
+  const upstreamSubpathForRedirect = new URL(endpoint.base_url).pathname.replace(/\/$/, "")
+  const portalPathForRedirect = `/portal/${endpoint.type}`
+
   upstreamRes.headers.forEach((value, key) => {
     const lower = key.toLowerCase()
     if (STRIP_RESPONSE_HEADERS.has(lower)) return
     if (lower === "set-cookie") {
       responseHeaders.append(key, rewriteSetCookie(value, endpoint.type))
+      return
+    }
+    if (lower === "location") {
+      // Rewrite redirect Location so the browser stays within the proxy
+      let loc = value
+      if (upstreamSubpathForRedirect) loc = loc.split(`${upstreamOrigin}${upstreamSubpathForRedirect}`).join(portalPathForRedirect)
+      loc = loc.split(`${upstreamOrigin}/`).join(`${portalPathForRedirect}/`)
+      if (upstreamSubpathForRedirect) loc = loc.split(`${upstreamSubpathForRedirect}/`).join(`${portalPathForRedirect}/`)
+      responseHeaders.set(key, loc)
       return
     }
     responseHeaders.set(key, value)

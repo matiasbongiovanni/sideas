@@ -29,7 +29,13 @@ async function handler(
   }
 
   const cred = await getCredential(user.id, endpoint)
-  const cookie = await getUpstreamCookie(endpoint, user.id, cred).catch(() => null)
+
+  // Skip server-side login if the browser already has an upstream session cookie.
+  // This avoids running loginUpstream for every CSS/JS/image sub-resource request.
+  const sessionCookieName = type === "zabbix" ? "zbx_session" : "PHPSESSID"
+  const browserCookies = request.headers.get("cookie") ?? ""
+  const browserHasSession = browserCookies.includes(`${sessionCookieName}=`)
+  const cookie = browserHasSession ? null : await getUpstreamCookie(endpoint, user.id, cred).catch(() => null)
 
   const upstreamPath = "/" + (path?.join("/") ?? "")
 
