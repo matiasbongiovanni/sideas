@@ -29,11 +29,7 @@ async function handler(
   }
 
   const cred = await getCredential(user.id, endpoint)
-  if (!cred) console.error("[portal/proxy] no credential found for user", user.id, "endpoint", endpoint.id, "auth_mode", endpoint.auth_mode)
-  const cookie = await getUpstreamCookie(endpoint, user.id, cred).catch((e) => {
-    console.error("[portal/proxy] getUpstreamCookie failed:", e)
-    return null
-  })
+  const cookie = await getUpstreamCookie(endpoint, user.id, cred).catch(() => null)
 
   const upstreamPath = "/" + (path?.join("/") ?? "")
 
