@@ -145,6 +145,9 @@ export async function proxyRequest({
     }
   })
   forwardHeaders["accept-encoding"] = "identity"
+  if (endpoint.type === "inventario") {
+    forwardHeaders["accept-language"] = "es-AR,es;q=0.9"
+  }
 
   // Cookie strategy:
   // - If the browser already has a session cookie for this portal, prefer it.

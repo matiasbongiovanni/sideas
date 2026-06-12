@@ -61,6 +61,7 @@ export async function loginInventory(baseUrl: string, user: string, pass: string
   const passField = process.env.IMS_PASS_FIELD ?? "PASSWD"
   const submitField = process.env.IMS_SUBMIT_FIELD ?? "Valid_CNX"
   const submitValue = process.env.IMS_SUBMIT_VALUE ?? "Send"
+  const language = process.env.IMS_LANGUAGE ?? "es"
 
   const loginUrl = `${baseUrl}${loginPath}`
 
@@ -78,7 +79,7 @@ export async function loginInventory(baseUrl: string, user: string, pass: string
   const csrfField = getCsrfFieldName(html)
 
   // Paso 2: POST credenciales
-  const body = new URLSearchParams({ [userField]: user, [passField]: pass, [submitField]: submitValue })
+  const body = new URLSearchParams({ [userField]: user, [passField]: pass, [submitField]: submitValue, LANGUAGE: language })
   if (csrfToken) body.set(csrfField, csrfToken)
 
   let postRes: Response
