@@ -48,9 +48,12 @@ export async function getUpstreamCookie(
 }
 
 // ── Headers ───────────────────────────────────────────────────────────────────
-// Only strip hop-by-hop transport headers — never strip security headers
+// Strip hop-by-hop transport headers + upstream framing headers.
+// Upstream servers (Zabbix, IMS) may send X-Frame-Options or frame-ancestors CSP
+// that would conflict with our same-origin proxy headers. We own those headers here.
 const STRIP_RESPONSE_HEADERS = new Set([
   "content-encoding", "content-length", "transfer-encoding",
+  "x-frame-options", "content-security-policy",
 ])
 
 const STRIP_REQUEST_HEADERS = new Set([

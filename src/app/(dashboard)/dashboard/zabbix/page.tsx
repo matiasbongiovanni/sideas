@@ -33,6 +33,17 @@ export default async function ZabbixPage() {
             <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" title="Monitoreo activo" />
             <span className="text-xs text-slate-400">{ctx.client.name}</span>
           </div>
+          <a
+            href="/portal/zabbix/zabbix.php?action=dashboard.view"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors"
+          >
+            Abrir portal
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
         </header>
 
         <div className="flex-1 p-6 overflow-hidden">
