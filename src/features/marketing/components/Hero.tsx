@@ -114,7 +114,7 @@ export default function Inicio() {
                         </p>
 
                         <a
-                            href="#contacto"
+                            href="/login"
                             className="group mt-10 inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-[#0B3C78] to-[#4398FF] px-8 py-4 text-sm font-bold text-white shadow-lg shadow-[#4398FF]/20 transition-all duration-300 hover:scale-105 hover:shadow-[#4398FF]/40"
                         >
                             Contactanos
