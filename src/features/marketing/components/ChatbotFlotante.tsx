@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react"
 // Asumo que tienes esto definido en tus utilidades, si no, puedes reemplazarlo por la URL directa
-import { WEBHOOKS } from "@/lib/constants"
 
 interface Message {
   role: "user" | "bot"

@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
+import { redirect } from "next/navigation"
 import AdminSidebar from "@/components/admin/AdminSidebar"
 import { getUser } from "@/lib/supabase/actions"
+import { isAdminEmail } from "@/lib/admin"
 
 export const metadata: Metadata = {
   title: {
@@ -12,6 +14,10 @@ export const metadata: Metadata = {
 
 export default async function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const user = await getUser()
+
+  if (!user || !isAdminEmail(user.email)) {
+    redirect("/admin/login")
+  }
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">

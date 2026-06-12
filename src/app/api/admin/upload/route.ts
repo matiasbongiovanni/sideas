@@ -7,6 +7,13 @@ export const maxDuration = 30
 
 const BUCKET = "news-images"
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"]
+const MIME_TO_EXT: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/gif": "gif",
+}
 const MAX_BYTES = 10 * 1024 * 1024
 
 export async function POST(req: NextRequest) {
@@ -28,7 +35,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "El archivo supera los 10MB máximos." }, { status: 400 })
   }
 
-  const ext = file.name.split(".").pop() ?? "jpg"
+  const ext = MIME_TO_EXT[file.type] ?? "jpg"
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
   const path = `noticias/${filename}`
 

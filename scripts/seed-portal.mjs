@@ -19,9 +19,9 @@ if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
 const ALG = "aes-256-gcm"
 const SEP = ":"
 
-function deriveKey() {
+function deriveKey(salt) {
   if (!PORTAL_CRED_SECRET) return Buffer.alloc(32, 0)
-  return scryptSync(PORTAL_CRED_SECRET, "sideas-portal-salt", 32)
+  return scryptSync(PORTAL_CRED_SECRET, salt, 32)
 }
 
 function encryptSecret(plain) {
@@ -29,20 +29,36 @@ function encryptSecret(plain) {
     console.warn("⚠️  PORTAL_CRED_SECRET no seteada — credencial guardada en texto plano")
     return plain
   }
-  const key = deriveKey()
+  const salt = randomBytes(16)
+  const key = deriveKey(salt)
   const iv = randomBytes(12)
   const cipher = createCipheriv(ALG, key, iv)
   const encrypted = Buffer.concat([cipher.update(plain, "utf8"), cipher.final()])
   const tag = cipher.getAuthTag()
-  return [iv.toString("base64"), tag.toString("base64"), encrypted.toString("base64")].join(SEP)
+  // Format: salt:iv:tag:ciphertext (matches src/lib/portal/crypto.ts)
+  return [salt.toString("base64"), iv.toString("base64"), tag.toString("base64"), encrypted.toString("base64")].join(SEP)
 }
 
 // ── Datos a seedear ─────────────────────────────────────────────────────────
+// Passwords must be provided via env vars — never hardcode credentials
+const SEED_PASSWORDS = {
+  cmaria:    process.env.SEED_PASSWORD_CMARIA,
+  etorres:   process.env.SEED_PASSWORD_ETORRES,
+  grui:      process.env.SEED_PASSWORD_GRUI,
+  pgonzalez: process.env.SEED_PASSWORD_PGONZALEZ,
+}
+
+const missingPasswords = Object.entries(SEED_PASSWORDS).filter(([, v]) => !v).map(([k]) => k)
+if (missingPasswords.length > 0) {
+  console.error(`❌  Faltan contraseñas en variables de entorno: ${missingPasswords.map(k => `SEED_PASSWORD_${k.toUpperCase()}`).join(", ")}`)
+  process.exit(1)
+}
+
 const USERS = [
-  { username: "cmaria",    full_name: "Carlos María",    password: "Temporal2026"  },
-  { username: "etorres",   full_name: "Ezequiel Torres",  password: "Argentina2026" },
-  { username: "grui",      full_name: "Gerardo Rui",      password: "Cordoba2026."  },
-  { username: "pgonzalez", full_name: "Pablo González",   password: "America2026."  },
+  { username: "cmaria",    full_name: "Carlos María",    password: SEED_PASSWORDS.cmaria    },
+  { username: "etorres",   full_name: "Ezequiel Torres",  password: SEED_PASSWORDS.etorres   },
+  { username: "grui",      full_name: "Gerardo Rui",      password: SEED_PASSWORDS.grui      },
+  { username: "pgonzalez", full_name: "Pablo González",   password: SEED_PASSWORDS.pgonzalez },
 ]
 
 const CLIENT = { name: "Ingenia SA — Jesús María", slug: "ingenia-jesus-maria" }
@@ -64,7 +80,10 @@ const ENDPOINTS = [
   },
 ]
 
-const ZABBIX_SHARED_CRED = { username: "racevedo", password: "B3t1t0.2026" }
+const ZABBIX_SHARED_CRED = {
+  username: process.env.ZABBIX_SHARED_USERNAME || (() => { throw new Error("ZABBIX_SHARED_USERNAME env var requerida") })(),
+  password: process.env.ZABBIX_SHARED_PASSWORD || (() => { throw new Error("ZABBIX_SHARED_PASSWORD env var requerida") })(),
+}
 
 // ── Helpers HTTP ────────────────────────────────────────────────────────────
 const headers = {

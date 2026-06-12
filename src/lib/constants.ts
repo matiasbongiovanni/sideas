@@ -15,8 +15,3 @@ export const SOCIAL_LINKS = {
   facebook: "https://www.facebook.com/sideasconsultores",
   instagram: "https://www.instagram.com/sideasconsultores",
 } as const
-
-export const WEBHOOKS = {
-  chatbot: "https://secretaria.sideasconsultores.com.ar/webhook/Agente-Web",
-  contactForm: "https://secretaria.sideasconsultores.com.ar/webhook/Agente-Email",
-} as const

@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { WEBHOOKS } from "@/lib/constants"
 
 interface Message {
   role: "user" | "bot"

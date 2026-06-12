@@ -2,22 +2,26 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { createClient } from "@/lib/supabase/client";
 
 export default function RecuperarPassword() {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulamos la llamada a la API con un pequeño delay
-    setTimeout(() => {
-      setIsSubmitting(false);
+    const supabase = createClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/reset-password`,
+    });
+
+    setIsSubmitting(false);
+    if (!error) {
       setIsSuccess(true);
-    }, 2000);
+    }
   };
 
   return (

@@ -4,7 +4,6 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { WEBHOOKS } from "@/lib/constants"
 
 const contactSchema = z.object({
     nombre: z.string().min(1, "El nombre es requerido"),

@@ -43,13 +43,6 @@ next-env.d.ts
 .vercel
 .env*.local
 
-# Ignore Supabase client secrets
-src/lib/supabase/client.ts
-
-# ⚠️ WARNING: Sensitive Supabase credentials
-# Never commit your credentials (such as API keys or service role keys) to version control.
-# Remove below if present and add them to a .env file, ignored above.
-# NEXT_PUBLIC_SUPABASE_URL=https://pamdsyjbfykbmwawlgxj.supabase.co
-# NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhbWRzeWpiZnlrYm13YXdsZ3hqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3OTI5MzUsImV4cCI6MjA5MTM2ODkzNX0.G0NDxbfJZx21ah9lyFd-JUvWvO6pcCpuU1Ytwj9Xy8s
-# SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhbWRzeWpiZnlrYm13YXdsZ3hqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTc5MjkzNSwiZXhwIjoyMDkxMzY4OTM1fQ.UZEPnt_F5gpupdBUtHM5pTg-cRxmBqtPCXwokytDgkg
+# Supabase client file — no secrets inside, safe to commit
+# (removed from gitignore so code review can see it)
 

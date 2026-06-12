@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { getPortalContext, getEndpointForRequest, getCredential } from "@/lib/portal/queries"
+import { getPortalContext, getEndpointForRequest } from "@/lib/portal/queries"
 import { PortalSidebar } from "@/components/dashboard/PortalSidebar"
-import { OCSAutoLogin } from "@/components/dashboard/OCSAutoLogin"
 
 export default async function InventarioPage() {
   const supabase = await createClient()
@@ -18,10 +17,8 @@ export default async function InventarioPage() {
   const endpoint = await getEndpointForRequest(user.id, "inventario")
   if (!endpoint) redirect("/dashboard")
 
-  const cred = await getCredential(user.id, endpoint)
-  // base_url = "https://ims.sideasconsultores.com.ar/ocsreports"
-  const iframeSrc = endpoint.base_url + "/"
-  const loginAction = endpoint.base_url + "/index.php"
+  // SSO happens server-side through the proxy route — credentials never reach the browser
+  const iframeSrc = `/portal/inventario/`
 
   return (
     <div className="flex h-screen w-full bg-slate-50 overflow-hidden font-sans">
@@ -41,9 +38,7 @@ export default async function InventarioPage() {
 
         <div className="flex-1 overflow-hidden p-6">
           <div className="w-full h-full rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-white">
-            {/* Direct iframe — bypasses Vercel bot protection that blocks server-side proxy */}
             <iframe
-              name="ocs-frame"
               src={iframeSrc}
               title={endpoint.label}
               className="w-full h-full border-none"
@@ -52,15 +47,6 @@ export default async function InventarioPage() {
           </div>
         </div>
       </main>
-
-      {/* Auto-submit form into iframe for SSO — cross-origin form POST is browser-allowed */}
-      {cred && (
-        <OCSAutoLogin
-          action={loginAction}
-          username={cred.username}
-          password={cred.password}
-        />
-      )}
     </div>
   )
 }

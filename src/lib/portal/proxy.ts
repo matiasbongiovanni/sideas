@@ -48,9 +48,9 @@ export async function getUpstreamCookie(
 }
 
 // ── Headers ───────────────────────────────────────────────────────────────────
+// Only strip hop-by-hop transport headers — never strip security headers
 const STRIP_RESPONSE_HEADERS = new Set([
-  "x-frame-options", "strict-transport-security", "content-security-policy",
-  "x-content-type-options", "content-encoding", "content-length", "transfer-encoding",
+  "content-encoding", "content-length", "transfer-encoding",
 ])
 
 const STRIP_REQUEST_HEADERS = new Set([
@@ -59,10 +59,13 @@ const STRIP_REQUEST_HEADERS = new Set([
 ])
 
 function rewriteSetCookie(raw: string, portalType: string): string {
-  return raw
+  let rewritten = raw
     .replace(/Domain=[^;]+;?\s*/gi, "")
     .replace(/Path=[^;]*/gi, `Path=/portal/${portalType}`)
     .replace(/SameSite=[^;]*/gi, "SameSite=Lax")
+  if (!/Secure/i.test(rewritten)) rewritten += "; Secure"
+  if (!/HttpOnly/i.test(rewritten)) rewritten += "; HttpOnly"
+  return rewritten
 }
 
 // ── HTML patching ─────────────────────────────────────────────────────────────
@@ -80,62 +83,18 @@ function isLoginPage(html: string, type: PortalType): boolean {
   return false
 }
 
-function injectAutoLogin(html: string, cred: PortalCredential, type: PortalType): string {
-  const style = `<style>body{opacity:0!important}</style>`
-
-  let script: string
-  if (type === "zabbix") {
-    script = `<script>
-(function(){
-  var u=${JSON.stringify(cred.username)},p=${JSON.stringify(cred.password)};
-  // Safety: show page after 4s even if auto-login doesn't fire
-  var t=setTimeout(function(){document.documentElement.style.opacity='1';},4000);
-  function go(){
-    var n=document.getElementById("name");
-    var pw=document.getElementById("password");
-    var btn=document.querySelector('button[name="enter"]');
-    if(n&&pw&&btn){n.value=u;pw.value=p;clearTimeout(t);btn.click();}
-    else{setTimeout(go,50);}
-  }
-  if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",go);}
-  else{go();}
-})();
-</script>`
-  } else {
-    // OCS Inventory NG: LOGIN / PASSWD / Valid_CNX submit
-    script = `<script>
-(function(){
-  var u=${JSON.stringify(cred.username)},p=${JSON.stringify(cred.password)};
-  // Safety: show page after 4s even if auto-login doesn't fire
-  var t=setTimeout(function(){document.documentElement.style.opacity='1';},4000);
-  function go(){
-    var n=document.getElementById("LOGIN");
-    var pw=document.getElementById("PASSWD");
-    var btn=document.querySelector('input[name="Valid_CNX"]');
-    if(n&&pw&&btn){n.value=u;pw.value=p;clearTimeout(t);btn.click();}
-    else{setTimeout(go,50);}
-  }
-  if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",go);}
-  else{go();}
-})();
-</script>`
-  }
-
-  return html
-    .replace(/(<head[^>]*>)/i, `$1${style}`)
-    .replace("</body>", script + "</body>")
-}
-
 function patchHtml(html: string, endpoint: PortalEndpoint, cred?: PortalCredential | null): string {
   const portalPath = `/portal/${endpoint.type}`
   const upstreamSubpath = new URL(endpoint.base_url).pathname.replace(/\/$/, "")
 
   let out = html
 
-  // Auto-login injection: if upstream returned the login page, auto-submit credentials
-  if (cred && isLoginPage(out, endpoint.type)) {
-    out = injectAutoLogin(out, cred, endpoint.type)
-  }
+  // If upstream returned the login page but we have credentials, the server-side
+  // loginUpstream() should have handled SSO. If we still see the login page,
+  // the session has expired — let the user see it rather than injecting credentials
+  // into the browser (which would expose them client-side).
+  void cred
+  void isLoginPage
 
   try {
     const origin = new URL(endpoint.base_url).origin
