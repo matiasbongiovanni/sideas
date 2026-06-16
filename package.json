@@ -18,7 +18,7 @@
     "motion": "^12.34.3",
     "next": "16.2.9",
     "radix-ui": "^1.4.3",
-    "react": "19.2.3",
+    "react": "19.2.7",
     "react-dom": "19.2.3",
     "react-fast-marquee": "^1.6.5",
     "react-hook-form": "^7.72.0",
