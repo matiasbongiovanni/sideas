@@ -90,11 +90,20 @@ function isLoginPage(html: string, type: PortalType): boolean {
 
 function injectOcsStyles(): string {
   // OCS Inventory NG 2.x = Bootstrap 3, layout de navbar superior (sin sidebar).
-  // El navbar es el ÚNICO menú de navegación de OCS, así que NO se oculta:
-  // sólo se quita la cromática redundante con el header de SIDEAS y se evita
-  // que el usuario cierre la sesión OCS desde adentro del iframe (rompería el SSO).
-  return `<style>
+  // Inyectamos Inter (misma fuente que SIDEAS) para coherencia visual, y limpiamos
+  // la cromática redundante sin tocar la navegación propia de OCS.
+  return `<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
     /* ── OCS Inventory NG 2.x — modo embebido en iframe SIDEAS ── */
+
+    /* Fuente coherente con SIDEAS */
+    html, body, table, td, th, input, button, select, textarea, .navbar, .navbar *, label {
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
 
     /* Logo/brand de OCS: redundante con el header de SIDEAS */
     .navbar-brand.header-logo,
