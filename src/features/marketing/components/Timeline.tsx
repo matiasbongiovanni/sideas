@@ -4,10 +4,17 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import Image from "next/image"
 
 const milestones = [
-    { year: "2020", text: "Nacemos como consultora IT" },
-    { year: "2022", text: "Expansión en infraestructura y sistemas" },
-    { year: "2024", text: "+ 15 clientes activos" },
-    { year: "2026", text: "Soluciones integrales a medida" },
+    { year: "1995", text: "Nace Windows 95" },
+    { year: "1998", text: "Expansión del USB e Internet" },
+    { year: "2001", text: "Windows XP, la popularización de Windows" },
+    { year: "2003–2006", text: "Virtualización y Cloud: comienza la computación en la nube" },
+    { year: "2007–2008", text: "Smartphone iOS-Android: la revolución móvil" },
+    { year: "2009", text: "SSD: mejora drástica en velocidad" },
+    { year: "2015", text: "Windows 10: unifica dispositivos y nube" },
+    { year: "2020", text: "Pandemia = Trabajo remoto" },
+    { year: "2021", text: "Windows 11: más integración a la nube" },
+    { year: "2022", text: "Inicia la transformación de la IA Generativa" },
+    { year: "2026", text: "IA integrada: asistentes inteligentes multimodales" },
 ]
 
 const servicios = [
@@ -128,32 +135,35 @@ export default function Timeline() {
                     {/* Left – Timeline */}
                     <div className="flex flex-col justify-center">
                         <div className="mb-12">
-                            <h2 className="text-sm font-bold tracking-widest text-[#4398FF] uppercase mb-2">Evolución Corporativa</h2>
+                            <h2 className="text-sm font-bold tracking-widest text-[#4398FF] uppercase mb-2">Evolución Tecnológica</h2>
                             <h3 className="text-3xl lg:text-4xl font-light text-white">
-                                Nuestra <span className="font-bold">Trayectoria</span>
+                                Más de <span className="font-bold">30 años</span>
                             </h3>
+                            <p className="text-slate-400 mt-3 text-sm leading-relaxed">
+                                Acompañamos a las organizaciones en cada etapa de su transformación digital.
+                            </p>
                         </div>
 
                         <div className="relative">
                             {/* Línea vertical con gradiente corporativo */}
                             <div className="absolute left-[9px] top-3 bottom-3 w-[2px] bg-gradient-to-b from-[#4398FF] via-[#0B3C78] to-transparent rounded-full" />
 
-                            <div className="space-y-8">
+                            <div className="space-y-4">
                                 {milestones.map((m, i) => (
                                     <div key={i} className="relative pl-12 group cursor-default">
                                         {/* Dot animado */}
                                         <div
-                                            className="absolute left-0 top-2 h-5 w-5 rounded-full border-[3px] border-slate-900 bg-[#4398FF] transition-all duration-300 group-hover:scale-125"
+                                            className="absolute left-0 top-2 h-4 w-4 rounded-full border-[3px] border-slate-900 bg-[#4398FF] transition-all duration-300 group-hover:scale-125"
                                             style={{
-                                                opacity: i <= milestones.length - 1 ? 1 : 0.3,
-                                                boxShadow: "0 0 12px rgba(67,152,255,0.4)"
+                                                opacity: 1,
+                                                boxShadow: "0 0 10px rgba(67,152,255,0.4)"
                                             }}
                                         />
-                                        <div className="bg-slate-800/20 hover:bg-slate-800/40 border border-transparent hover:border-slate-700/50 p-4 rounded-2xl transition-all duration-300 transform group-hover:translate-x-1">
-                                            <p className="text-3xl font-bold text-[#4398FF]">
+                                        <div className="bg-slate-800/20 hover:bg-slate-800/40 border border-transparent hover:border-slate-700/50 px-4 py-3 rounded-xl transition-all duration-300 transform group-hover:translate-x-1">
+                                            <p className="text-lg font-bold text-[#4398FF] leading-tight">
                                                 {m.year}
                                             </p>
-                                            <p className="text-base mt-1 text-slate-300 font-medium">
+                                            <p className="text-sm mt-0.5 text-slate-300 font-medium">
                                                 {m.text}
                                             </p>
                                         </div>

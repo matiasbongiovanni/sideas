@@ -13,7 +13,7 @@ export const localBusinessJsonLd = {
     addressCountry: "AR",
   },
   sameAs: [
-    "https://www.linkedin.com/company/sideas-consultores",
+    "https://www.linkedin.com/in/sideas-consultores/",
     "https://www.facebook.com/sideasconsultores",
     "https://www.instagram.com/sideasconsultores",
   ],

@@ -39,10 +39,7 @@ export function PortalSidebar({ profile, client, endpoints }: Props) {
 
       {/* Nav */}
       <nav className="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
-        <p className="px-4 text-[10px] font-bold tracking-widest text-slate-500 uppercase mb-1">
-          {client.name}
-        </p>
-        <p className="px-4 text-[10px] tracking-widest text-slate-600 uppercase mb-4">
+        <p className="px-4 text-[10px] font-bold tracking-widest text-slate-500 uppercase mb-4">
           Panel de Control
         </p>
 

@@ -3,9 +3,9 @@ import type { Project } from "@/features/projects/types"
 export const proyectos: Project[] = [
   {
     slug: "soporte-integral-ingenia",
-    title: "Soporte IT y Obras Eléctricas – INGENIA S.A.",
+    title: "INGENIA S.A.",
     description:
-      "Soporte técnico integral, administración de servidores y redes para INGENIA S.A., empresa de obras eléctricas y mantenimiento, con cobertura 24/7 y gestión en múltiples sucursales.",
+      "Soporte técnico integral, administración de servidores y redes, con cobertura 24/7 y gestión en múltiples sucursales.",
     tags: ["Soporte IT", "Infraestructura", "Mantenimiento"],
     image: "/ingeniafoto.jpg",
     detail:
@@ -28,9 +28,9 @@ export const proyectos: Project[] = [
   },
   {
     slug: "infraestructura-datacenter",
-    title: "DataCenter para Cooperativa JJMM",
+    title: "Cooperativa de Servicios Públicos de Colonia Caroya y Jesús María LTDA",
     description:
-      "Diseño, instalación y puesta en marcha de infraestructura de DataCenter para la Cooperativa de Servicios Públicos de Colonia Caroya y Jesús María, con soporte 24/7, monitoreo Zabbix y administración completa de servidores.",
+      "Diseño, instalación y puesta en marcha de infraestructura de DataCenter, con soporte 24/7, monitoreo Zabbix y administración completa de servidores.",
     tags: ["Infraestructura", "DataCenter", "Zabbix"],
     image: "/JJMM.png",
     detail:
@@ -52,9 +52,9 @@ export const proyectos: Project[] = [
   },
   {
     slug: "soporte-integral-usina-creativa",
-    title: "Soporte IT Integral – Usina Creativa",
+    title: "USINA CREATIVA",
     description:
-      "Administración completa de infraestructura IT para Usina Creativa, agencia de comunicación organizacional y corporativa, con soporte técnico 24/7, servidores virtualizados y monitoreo continuo.",
+      "Administración completa de infraestructura IT, con soporte técnico 24/7, servidores virtualizados y monitoreo continuo.",
     tags: ["Soporte IT", "Servidores", "Redes"],
     image: "/Usina.png",
     detail:
@@ -97,5 +97,29 @@ export const proyectos: Project[] = [
       "Reducción de incidentes de seguridad de acceso",
     ],
     images: ["/identidad-digital.png"],
+  },
+  {
+    slug: "soporte-integral-cugat",
+    title: "CUGAT SRL",
+    description:
+      "Gestión integral de infraestructura tecnológica para empresa de autopartes eléctricas: servidores, redes, seguridad, soporte presencial y remoto con monitoreo proactivo.",
+    tags: ["Soporte IT", "Infraestructura", "Redes"],
+    image: "/cugat.webp",
+    detail:
+      "Desde nuestra consultora IT acompañamos a CUGAT en la gestión integral de su infraestructura tecnológica, brindando soporte estratégico y operativo para garantizar la continuidad de los servicios. Administramos y mantenemos puestos de trabajo, servidores físicos y virtuales, redes de comunicaciones, sistemas de respaldo, seguridad informática y servicios críticos para la operación diaria. Además, proporcionamos monitoreo proactivo, soporte técnico presencial y remoto, gestión de incidencias, asesoramiento en proyectos de mejora tecnológica y planificación de crecimiento, contribuyendo a que ambas organizaciones cuenten con una plataforma tecnológica segura, estable y alineada con sus objetivos institucionales.",
+    category: "Soporte IT",
+    location: "Córdoba, Argentina",
+    year: "2024",
+    challenge:
+      "Garantizar la continuidad operativa de una empresa de autopartes eléctricas con infraestructura heterogénea: puestos de trabajo, servidores físicos y virtuales, redes de comunicaciones y servicios críticos.",
+    strategy:
+      "Implementamos un modelo de soporte integral con cobertura presencial y remota: administración de servidores, gestión de redes, sistemas de respaldo automatizados, seguridad informática y monitoreo proactivo. Se estableció un proceso de gestión de incidencias y asesoramiento continuo para proyectos de mejora y planificación de crecimiento.",
+    results: [
+      "Plataforma tecnológica segura y estable en operación continua",
+      "Monitoreo proactivo con respuesta antes de impacto al usuario",
+      "Soporte técnico presencial y remoto con gestión de incidencias",
+      "Asesoramiento en planificación y crecimiento tecnológico",
+    ],
+    images: ["/cugat.webp"],
   },
 ]

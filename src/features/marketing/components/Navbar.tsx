@@ -46,12 +46,12 @@ export default function Navbar() {
                     {/* Separador sutil */}
                     <div className="h-6 w-px bg-white/10"></div>
 
-                    {/* CTA Contactanos - Desktop */}
+                    {/* CTA Ver Recursos - Desktop */}
                     <Link
-                        href="/#contacto"
+                        href="/login"
                         className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#0B3C78] to-[#4398FF] px-5 py-2 text-sm font-bold text-white shadow-lg hover:brightness-110 transition-all duration-300"
                     >
-                        Contactanos
+                        Ver Recursos
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                         </svg>
@@ -84,14 +84,14 @@ export default function Navbar() {
                         </a>
                     ))}
 
-                    {/* CTA Contactanos - Mobile */}
+                    {/* CTA Ver Recursos - Mobile */}
                     <div className="mt-2 pt-2 border-t border-white/10">
                         <Link
-                            href="/#contacto"
+                            href="/login"
                             onClick={() => setMenuOpen(false)}
                             className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#0B3C78] to-[#4398FF] px-4 py-3 text-sm font-bold text-white shadow-md transition-all active:scale-95"
                         >
-                            Contactanos
+                            Ver Recursos
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                             </svg>

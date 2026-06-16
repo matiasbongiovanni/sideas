@@ -11,7 +11,7 @@ export const NAV_LINKS = [
 ] as const
 
 export const SOCIAL_LINKS = {
-  linkedin: "https://www.linkedin.com/company/sideas-consultores",
+  linkedin: "https://www.linkedin.com/in/sideas-consultores/",
   facebook: "https://www.facebook.com/sideasconsultores",
   instagram: "https://www.instagram.com/sideasconsultores",
 } as const

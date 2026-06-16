@@ -6,14 +6,14 @@ export const equipo: TeamMember[] = [
     name: "Roberto Acevedo",
     role: "CEO & Fundador",
     photo: "/equipo/roberto-acevedo.png",
-    linkedinUrl: "https://www.linkedin.com/in/robertoacevedo/",
+    linkedinUrl: "https://www.linkedin.com/in/betoacevedo/",
   },
   {
     id: "rodolfo-abba",
     name: "Rodolfo Abbá",
     role: "CTO",
     photo: "/equipo/rodolfo-abba.png",
-    linkedinUrl: "https://www.linkedin.com/in/rodolfoabba/",
+    linkedinUrl: "https://www.linkedin.com/in/rodolfo-gabriel-abb%C3%A1-26137265/",
   },
   {
     id: "jose-martinengo",
@@ -27,7 +27,7 @@ export const equipo: TeamMember[] = [
     name: "María Casari",
     role: "Analista de infraestructura y soporte IT",
     photo: "/equipo/maria-casari.jpeg",
-    linkedinUrl: "https://www.linkedin.com/in/maria-casari-06b90b14b/",
+    linkedinUrl: "https://www.linkedin.com/in/maria-silvia-casari-997b4816/",
   },
   {
     id: "matias-bongiovanni",
@@ -41,7 +41,7 @@ export const equipo: TeamMember[] = [
     name: "Gabriel Angel Rios",
     role: "Encargado en servicios de Microtik",
     photo: "/equipo/gabrielrios.jpeg",
-    linkedinUrl: "https://www.linkedin.com/in/gabriel-rios-43291651/",
+    linkedinUrl: "https://www.linkedin.com/in/gabriel-angel-rios-235636184/",
   },
   {
     id: "ivan-calderon",
@@ -55,20 +55,18 @@ export const equipo: TeamMember[] = [
     name: "Luna Casari",
     role: "Analista de RRHH",
     photo: "/equipo/luna-casari.jpeg",
-    linkedinUrl: "https://www.linkedin.com/in/luna-casari-57496322a/",
+    linkedinUrl: "https://www.linkedin.com/in/luna-casari",
   },
   {
     id: "walter-casari",
     name: "Walter Casari",
     role: "Especialista en infraestructura de Microsoft",
     photo: "/equipo/walter-casari.png",
-    linkedinUrl: "https://www.linkedin.com/in/luna-casari-57496322a/",
   },
   {
     id: "andrea-garcia",
     name: "Andrea Garcia",
     role: "Analista de Sistemas",
     photo: "/equipo/andrea-garcia.png",
-    linkedinUrl: "https://www.linkedin.com/in/luna-casari-57496322a/",
   },
 ]

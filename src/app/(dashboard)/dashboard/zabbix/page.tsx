@@ -31,7 +31,6 @@ export default async function ZabbixPage() {
           <div className="flex items-center gap-3">
             <h1 className="text-xl font-bold text-slate-800">{endpoint.label}</h1>
             <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" title="Monitoreo activo" />
-            <span className="text-xs text-slate-400">{ctx.client.name}</span>
           </div>
           <a
             href="/portal/zabbix/zabbix.php?action=dashboard.view"
