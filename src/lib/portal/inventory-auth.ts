@@ -36,7 +36,8 @@ function getCsrfRegexes(): RegExp[] {
 function getCsrfFieldName(html: string): string {
   const custom = process.env.IMS_CSRF_FIELD
   if (custom) return custom
-  const match = html.match(/name="(CSRF_\d+)"/)
+  // OCS NG uses single-quoted attributes: name='CSRF_0'
+  const match = html.match(/name="(CSRF_\d+)"/) ?? html.match(/name='(CSRF_\d+)'/)
   return match?.[1] ?? "_token"
 }
 
@@ -61,7 +62,8 @@ export async function loginInventory(baseUrl: string, user: string, pass: string
   const passField = process.env.IMS_PASS_FIELD ?? "PASSWD"
   const submitField = process.env.IMS_SUBMIT_FIELD ?? "Valid_CNX"
   const submitValue = process.env.IMS_SUBMIT_VALUE ?? "Send"
-  const language = process.env.IMS_LANGUAGE ?? "es"
+  // OCS NG uses "LANG" with locale codes (es_ES, en_GB, fr_FR…)
+  const language = process.env.IMS_LANGUAGE ?? "es_ES"
 
   const loginUrl = `${baseUrl}${loginPath}`
 
@@ -75,11 +77,36 @@ export async function loginInventory(baseUrl: string, user: string, pass: string
 
   const initialCookie = extractCookies(getRes)
   const html = await getRes.text().catch(() => "")
-  const csrfToken = extractCsrfToken(html)
-  const csrfField = getCsrfFieldName(html)
+  let csrfToken = extractCsrfToken(html)
+  let csrfField = getCsrfFieldName(html)
+  let sessionCookieForLogin = initialCookie
 
-  // Paso 2: POST credenciales
-  const body = new URLSearchParams({ [userField]: user, [passField]: pass, [submitField]: submitValue, LANGUAGE: language })
+  // Paso 2: POST solo LANG=es_ES para setear el idioma en la sesión OCS.
+  // OCS actualiza el idioma por POST antes de las credenciales y devuelve un nuevo CSRF.
+  if (language) {
+    const langBody = new URLSearchParams({ LANG: language })
+    if (csrfToken) langBody.set(csrfField, csrfToken)
+    try {
+      const langRes = await fetch(loginUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded", Cookie: initialCookie },
+        body: langBody,
+        redirect: "manual",
+      })
+      const langHtml = await langRes.text().catch(() => "")
+      const newCsrf = extractCsrfToken(langHtml)
+      if (newCsrf) { csrfToken = newCsrf; csrfField = getCsrfFieldName(langHtml) }
+      // Merge cookies from language-change response
+      const langCookies = extractCookies(langRes)
+      const cm = new Map<string, string>()
+      for (const c of initialCookie.split("; ").filter(Boolean)) { const [n] = c.split("="); cm.set(n, c) }
+      for (const c of langCookies.split("; ").filter(Boolean)) { const [n] = c.split("="); cm.set(n, c) }
+      sessionCookieForLogin = [...cm.values()].join("; ")
+    } catch { /* ignore — proceed with original CSRF */ }
+  }
+
+  // Paso 3: POST credenciales
+  const body = new URLSearchParams({ [userField]: user, [passField]: pass, [submitField]: submitValue })
   if (csrfToken) body.set(csrfField, csrfToken)
 
   let postRes: Response
@@ -88,7 +115,7 @@ export async function loginInventory(baseUrl: string, user: string, pass: string
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        Cookie: initialCookie,
+        Cookie: sessionCookieForLogin,
       },
       body,
       redirect: "manual",
@@ -105,16 +132,18 @@ export async function loginInventory(baseUrl: string, user: string, pass: string
   }
 
   // OCS always sets PHPSESSID even on failed login — detect failure by checking
-  // if the response HTML still contains the login form
+  // if the response HTML still contains the login form.
+  // OCS NG uses single-quoted HTML attributes, so check both quote styles.
   const responseHtml = await postRes.text().catch(() => "")
-  const isStillLoginPage = responseHtml.includes('name="LOGIN"') && responseHtml.includes('name="PASSWD"')
-  if (isStillLoginPage) {
+  const hasUserField = responseHtml.includes(`name="${userField}"`) || responseHtml.includes(`name='${userField}'`)
+  const hasPassField = responseHtml.includes(`name="${passField}"`) || responseHtml.includes(`name='${passField}'`)
+  if (hasUserField && hasPassField) {
     throw new InventoryAuthError("Login al inventario fallido: credenciales incorrectas", "invalid_credentials")
   }
 
-  // Merge: use cookies from both GET and POST so the authenticated session is complete
+  // Merge: use cookies accumulated through all steps + final POST
   const cookieMap = new Map<string, string>()
-  for (const raw of initialCookie.split("; ").filter(Boolean)) {
+  for (const raw of sessionCookieForLogin.split("; ").filter(Boolean)) {
     const [name] = raw.split("="); cookieMap.set(name, raw)
   }
   for (const raw of extractCookies(postRes).split("; ").filter(Boolean)) {

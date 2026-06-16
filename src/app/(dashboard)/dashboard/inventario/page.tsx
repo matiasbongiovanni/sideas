@@ -32,7 +32,6 @@ export default async function InventarioPage() {
         <header className="h-20 flex items-center justify-between px-8 bg-white border-b border-slate-200/60 shadow-sm z-10 shrink-0">
           <div className="flex items-center gap-3">
             <h1 className="text-xl font-bold text-slate-800">{endpoint.label}</h1>
-            <span className="text-xs text-slate-400">{ctx.client.name}</span>
           </div>
           <a
             href={iframeSrc}

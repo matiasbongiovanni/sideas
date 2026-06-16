@@ -81,9 +81,51 @@ function isLoginPage(html: string, type: PortalType): boolean {
            html.includes('action="index.php"')
   }
   if (type === "inventario") {
-    return html.includes('name="LOGIN"') && html.includes('name="PASSWD"')
+    const hasLogin = html.includes('name="LOGIN"') || html.includes("name='LOGIN'")
+    const hasPasswd = html.includes('name="PASSWD"') || html.includes("name='PASSWD'")
+    return hasLogin && hasPasswd
   }
   return false
+}
+
+function injectOcsStyles(): string {
+  // OCS Inventory NG 2.x = Bootstrap 3, layout de navbar superior (sin sidebar).
+  // El navbar es el ÚNICO menú de navegación de OCS, así que NO se oculta:
+  // sólo se quita la cromática redundante con el header de SIDEAS y se evita
+  // que el usuario cierre la sesión OCS desde adentro del iframe (rompería el SSO).
+  return `<style>
+    /* ── OCS Inventory NG 2.x — modo embebido en iframe SIDEAS ── */
+
+    /* Logo/brand de OCS: redundante con el header de SIDEAS */
+    .navbar-brand.header-logo,
+    .navbar-brand img,
+    a.navbar-brand { display: none !important; }
+
+    /* Cerrar sesión: lo gestiona SIDEAS, no debe romper el SSO desde el iframe */
+    a[href*="logoff"],
+    a[href*="logout"],
+    li#logoff,
+    .logoff { display: none !important; }
+
+    /* Footer con versión de OCS */
+    footer, .footer, #footer, .footer_text { display: none !important; }
+
+    /* Reset de márgenes para que el contenido ocupe todo el iframe */
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #fff;
+      overflow-x: hidden;
+      overflow-y: auto !important;
+    }
+
+    /* Navbar fijo (algunos temas usan navbar-fixed-top) → que no tape el contenido */
+    body.navbar-fixed { padding-top: 0 !important; }
+
+    /* Apretar el contenedor principal al ancho del iframe */
+    .container-fluid { padding-left: 12px !important; padding-right: 12px !important; }
+    #fwk_content, .main_content { margin: 0 !important; }
+  </style>`
 }
 
 function patchHtml(html: string, endpoint: PortalEndpoint, cred?: PortalCredential | null): string {
@@ -92,12 +134,7 @@ function patchHtml(html: string, endpoint: PortalEndpoint, cred?: PortalCredenti
 
   let out = html
 
-  // If upstream returned the login page but we have credentials, the server-side
-  // loginUpstream() should have handled SSO. If we still see the login page,
-  // the session has expired — let the user see it rather than injecting credentials
-  // into the browser (which would expose them client-side).
   void cred
-  void isLoginPage
 
   try {
     const origin = new URL(endpoint.base_url).origin
@@ -114,6 +151,10 @@ function patchHtml(html: string, endpoint: PortalEndpoint, cred?: PortalCredenti
 
   const base = `<base href="${portalPath}/">`
   out = out.replace(/(<head[^>]*>)/i, `$1${base}`)
+
+  if (endpoint.type === "inventario") {
+    out = out.replace(/(<\/head>)/i, `${injectOcsStyles()}$1`)
+  }
 
   return out
 }
@@ -145,7 +186,7 @@ export async function proxyRequest({
     }
   })
   forwardHeaders["accept-encoding"] = "identity"
-  if (endpoint.type === "inventario") {
+  if (endpoint.type === "inventario" || endpoint.type === "zabbix") {
     forwardHeaders["accept-language"] = "es-AR,es;q=0.9"
   }
 
@@ -223,15 +264,26 @@ export async function proxyRequest({
     responseHeaders.set(key, value)
   })
 
-  // If we used a server-side login cookie and the upstream didn't send Set-Cookie
-  // (session already valid), inject it so the browser stores it for future requests.
-  if (!browserHasSession && cookie && endpoint.type === "zabbix") {
-    const zbxPart = cookie.split("; ").find(c => c.startsWith("zbx_session="))
-    if (zbxPart) {
-      const alreadySet = responseHeaders.getSetCookie?.().some(c => c.startsWith("zbx_session="))
-      if (!alreadySet) {
-        responseHeaders.append("set-cookie",
-          `${zbxPart}; Path=/portal/${endpoint.type}; SameSite=Lax; HttpOnly`)
+  // If we used a server-side login cookie and the upstream didn't send Set-Cookie,
+  // inject it so the browser stores it for future sub-resource requests.
+  if (!browserHasSession && cookie) {
+    if (endpoint.type === "zabbix") {
+      const zbxPart = cookie.split("; ").find(c => c.startsWith("zbx_session="))
+      if (zbxPart) {
+        const alreadySet = responseHeaders.getSetCookie?.().some(c => c.startsWith("zbx_session="))
+        if (!alreadySet) {
+          responseHeaders.append("set-cookie",
+            `${zbxPart}; Path=/portal/${endpoint.type}; SameSite=Lax; HttpOnly`)
+        }
+      }
+    } else if (endpoint.type === "inventario") {
+      const phpPart = cookie.split("; ").find(c => c.startsWith("PHPSESSID="))
+      if (phpPart) {
+        const alreadySet = responseHeaders.getSetCookie?.().some(c => c.startsWith("PHPSESSID="))
+        if (!alreadySet) {
+          responseHeaders.append("set-cookie",
+            `${phpPart}; Path=/portal/${endpoint.type}; SameSite=Lax; HttpOnly; Secure`)
+        }
       }
     }
   }
@@ -241,6 +293,26 @@ export async function proxyRequest({
 
   if (isHtml) {
     const html = await upstreamRes.text()
+
+    // OCS puede devolver 200 con la página de login cuando la sesión expiró.
+    // En ese caso, forzamos un re-login server-side y reintentamos una sola vez.
+    if (endpoint.type === "inventario" && isLoginPage(html, "inventario") && cred && userId !== undefined) {
+      const key = cacheKey(endpoint.id, userId)
+      invalidateCache(key)
+      try {
+        const newCookie = await loginUpstream(endpoint, cred)
+        setCachedCookie(key, newCookie)
+        forwardHeaders["cookie"] = newCookie
+        const retryRes = await fetch(targetUrl, { ...fetchOptions, headers: forwardHeaders })
+        const retryHtml = await retryRes.text()
+        const phpPart = newCookie.split("; ").find(c => c.startsWith("PHPSESSID="))
+        if (phpPart) responseHeaders.set("set-cookie",
+          `${phpPart}; Path=/portal/${endpoint.type}; SameSite=Lax; HttpOnly`)
+        return new Response(patchHtml(retryHtml, endpoint, cred),
+          { status: retryRes.status, headers: responseHeaders })
+      } catch { /* fall through to serve original */ }
+    }
+
     const patched = patchHtml(html, endpoint, cred)
     return new Response(patched, { status: upstreamRes.status, headers: responseHeaders })
   }
