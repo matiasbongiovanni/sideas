@@ -1,8 +1,19 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
+import createMiddleware from "next-intl/middleware"
+import { routing } from "@/i18n/routing"
 import { isAdminEmail } from "@/lib/admin"
 
+const handleI18nRouting = createMiddleware(routing)
+
 export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  // Rutas públicas (marketing): delega en next-intl para locale detection/redirect
+  if (pathname === "/" || pathname.startsWith("/es") || pathname.startsWith("/en")) {
+    return handleI18nRouting(request)
+  }
+
   const response = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -27,8 +38,6 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { pathname } = request.nextUrl
-
   // Rutas protegidas sin sesión → login
   if (!user && (pathname.startsWith("/dashboard") || pathname.startsWith("/portal"))) {
     const loginUrl = request.nextUrl.clone()
@@ -50,6 +59,8 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/",
+    "/(es|en)/:path*",
     "/dashboard/:path*",
     "/portal/:path*",
     "/admin/:path*",

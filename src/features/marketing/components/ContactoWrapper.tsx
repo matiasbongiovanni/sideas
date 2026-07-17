@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic"
 
 const Contacto = dynamic(
-  () => import("@/app/(marketing)/contacto/Contacto"),
+  () => import("@/app/[locale]/(marketing)/contacto/Contacto"),
   { ssr: false }
 )
 

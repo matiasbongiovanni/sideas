@@ -1,22 +1,32 @@
 import type { Metadata } from "next"
+import { getTranslations } from "next-intl/server"
+import { useTranslations } from "next-intl"
 
-export const metadata: Metadata = {
-    title: "Quiénes Somos | SIDEAS Consultores",
-    description:
-        "Conocé la historia de SIDEAS Consultores: empresa IT fundada en 2020 en Córdoba, Argentina. +15 clientes activos, soporte 24/7 y 12 servicios especializados.",
-    openGraph: {
-        title: "Quiénes Somos | SIDEAS Consultores",
-        description: "Conocé la historia de SIDEAS Consultores: empresa IT fundada en 2020 en Córdoba, Argentina.",
-        url: "https://sideasconsultores.com.ar/quienes-somos",
-    },
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+    const { locale } = await params
+    const t = await getTranslations({ locale, namespace: "QuienesSomos" })
+    return {
+        title: t("metaTitle"),
+        description: t("metaDescription"),
+        openGraph: {
+            title: t("metaTitle"),
+            description: t("metaDescription"),
+            url: `https://sideasconsultores.com.ar/${locale}/quienes-somos`,
+        },
+    }
 }
 
 export default function QuienesSomos() {
+    const t = useTranslations("QuienesSomos")
     const stats = [
-        { value: "2020", label: "Año de fundación" },
-        { value: "+15", label: "Clientes activos" },
-        { value: "24/7", label: "Soporte disponible" },
-        { value: "12", label: "Servicios IT" },
+        { value: "2020", label: t("statFounding") },
+        { value: "+15", label: t("statClients") },
+        { value: "24/7", label: t("statSupport") },
+        { value: "12", label: t("statServices") },
     ];
 
     return (
@@ -29,29 +39,25 @@ export default function QuienesSomos() {
                     <div>
                         <div className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 mb-6" style={{ borderColor: "rgba(67,152,255,0.3)", background: "rgba(67,152,255,0.1)" }}>
                             <span className="text-xs font-semibold tracking-wider uppercase" style={{ color: "#4398FF" }}>
-                                Quiénes Somos
+                                {t("badge")}
                             </span>
                         </div>
                         <h2 className="text-3xl font-bold text-white sm:text-4xl leading-tight mb-6">
-                            Tu socio tecnológico
+                            {t("titlePrefix")}
                             <br />
-                            <span style={{ color: "#4398FF" }}>de confianza</span>
+                            <span style={{ color: "#4398FF" }}>{t("titleHighlight")}</span>
                         </h2>
                         <p className="text-base leading-7 mb-6" style={{ color: "#94a3b8" }}>
-                            En SIDEAS nos especializamos en brindar soluciones integrales de
-                            infraestructura tecnológica. Nuestro equipo de profesionales está
-                            comprometido con la excelencia y la innovación constante.
+                            {t("paragraph1")}
                         </p>
                         <p className="text-base leading-7 mb-8" style={{ color: "#94a3b8" }}>
-                            Trabajamos con las últimas tecnologías para garantizar que tu
-                            empresa cuente con sistemas confiables, seguros y escalables que
-                            impulsen tu crecimiento.
+                            {t("paragraph2")}
                         </p>
                         <a
                             href="#contacto"
                             className="btn-primary inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-semibold"
                         >
-                            Conocenos más
+                            {t("cta")}
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                             </svg>

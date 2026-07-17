@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { servicios } from "@/data/servicios";
+import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { getServicios } from "@/data/servicios";
 
 // Mapeo de íconos (el mismo que tenías)
 const iconMap: Record<string, React.ReactNode> = {
@@ -20,16 +21,18 @@ const iconMap: Record<string, React.ReactNode> = {
     headphones: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 18v-6a9 9 0 0118 0v6M3 18a1 1 0 001 1h1a1 1 0 001-1v-3a1 1 0 00-1-1H4a1 1 0 00-1 1v3zm16 0a1 1 0 01-1 1h-1a1 1 0 01-1-1v-3a1 1 0 011-1h1a1 1 0 011 1v3z" /></svg>,
 };
 
-// Categorías lógicas (podés ajustar los IDs que entran en cada una)
-const CATEGORIAS = [
-    { id: "todos", label: "Todos los servicios" },
-    { id: "infra", label: "Infraestructura & Cloud" },
-    { id: "seguridad", label: "Seguridad & Redes" },
-    { id: "soporte", label: "Soporte & Gestión" },
-];
-
 export default function ServiciosInteractivos() {
+    const t = useTranslations("ServiciosInteractivos");
+    const locale = useLocale();
+    const servicios = getServicios(locale);
     const [filtro, setFiltro] = useState("todos");
+
+    const CATEGORIAS = [
+        { id: "todos", label: t("catTodos") },
+        { id: "infra", label: t("catInfra") },
+        { id: "seguridad", label: t("catSeguridad") },
+        { id: "soporte", label: t("catSoporte") },
+    ];
 
     // Lógica para filtrar (ajustá esto según los IDs reales de tus servicios)
     const serviciosFiltrados = servicios.filter((s) => {
@@ -91,16 +94,16 @@ export default function ServiciosInteractivos() {
 
                     <div className="relative z-10">
                         <h3 className="text-3xl font-bold text-white mb-4">
-                            Diseñamos infraestructura a tu medida
+                            {t("ctaTitle")}
                         </h3>
                         <p className="text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
-                            Si tu empresa tiene requerimientos específicos, nuestro equipo de ingeniería está listo para armar un plan de acción.
+                            {t("ctaParagraph")}
                         </p>
                         <Link
-                            href="/#contacto"
+                            href={{ pathname: "/", hash: "contacto" }}
                             className="inline-flex items-center justify-center gap-3 rounded-full bg-[#4398FF] px-8 py-4 text-sm font-bold text-white shadow-lg shadow-[#4398FF]/20 transition-all hover:-translate-y-1 hover:bg-[#3480eb]"
                         >
-                            Contactar con un asesor
+                            {t("ctaButton")}
                         </Link>
                     </div>
                 </div>

@@ -1,0 +1,217 @@
+{
+  "Metadata": {
+    "title": "SIDEAS Consultores | IT Infrastructure in Córdoba",
+    "titleTemplate": "%s | SIDEAS Consultores",
+    "description": "IT services company in Córdoba, Argentina. Data Center, 24/7 support, VoIP, MikroTik, Zabbix, Google Workspace and digital identity. Since 2020."
+  },
+  "Nav": {
+    "inicio": "Home",
+    "quienesSomos": "About Us",
+    "servicios": "Services",
+    "proyectos": "Projects",
+    "noticias": "News",
+    "equipo": "Team",
+    "contacto": "Contact",
+    "verRecursos": "View Resources",
+    "toggleMenu": "Toggle menu"
+  },
+  "Hero": {
+    "badge": "Engineering, Technology and the Future",
+    "title1": "Comprehensive,",
+    "title2": "tailored",
+    "title3": "solutions",
+    "subtitle": "Infrastructure & Systems",
+    "paragraph": "We bring together engineering, Data Center builds and server administration to guarantee solid, secure and scalable technology environments. We manage storage, monitoring and backup processes — both manual and automated — with 24/7 availability. We offer complete solutions for SMBs with 50 to 200 workstations looking for reliability, high performance and operational continuity.",
+    "cta": "View resources",
+    "locationLabel": "WE OPERATE IN:",
+    "growingNote": "...and we keep growing."
+  },
+  "Timeline": {
+    "kicker1": "Technology Evolution",
+    "titlePrefix": "Over",
+    "titleBold": "30 years",
+    "description": "We support organizations through every stage of their digital transformation.",
+    "kicker2": "Areas of Expertise",
+    "title2Prefix": "Featured",
+    "title2Bold": "Solutions",
+    "ariaSlider": "Services slider",
+    "ariaPrev": "Previous",
+    "ariaNext": "Next",
+    "ariaGoTo": "Go to service {n}",
+    "milestones": {
+      "y1995": "Windows 95 is born",
+      "y1998": "USB and Internet expansion",
+      "y2001": "Windows XP popularizes Windows",
+      "y2003": "Virtualization and Cloud: cloud computing begins",
+      "y2007": "iOS/Android smartphones: the mobile revolution",
+      "y2009": "SSD: a drastic speed improvement",
+      "y2015": "Windows 10 unifies devices and the cloud",
+      "y2020": "Pandemic = Remote work",
+      "y2021": "Windows 11: deeper cloud integration",
+      "y2022": "Generative AI transformation begins",
+      "y2026": "Integrated AI: multimodal intelligent assistants"
+    },
+    "services": {
+      "infraestructura": {
+        "title": "Infrastructure",
+        "subtitle": "& IT Support",
+        "description": "Server administration, on-premise and hybrid Data Centers, migrations and technical support with 24/7 coverage."
+      },
+      "redes": {
+        "title": "Networks",
+        "subtitle": "& Cybersecurity",
+        "description": "Connectivity optimization and data protection through firewalls, secure VPNs and centralized antivirus solutions."
+      },
+      "resguardo": {
+        "title": "Backup",
+        "subtitle": "& Monitoring",
+        "description": "Automated local and cloud backups. Real-time resource monitoring to prevent operational failures."
+      },
+      "comunicaciones": {
+        "title": "Communications",
+        "subtitle": "& Platforms",
+        "description": "IP telephony and VoIP management, plus deployment of collaborative and enterprise digital identity platforms."
+      },
+      "innovacion": {
+        "title": "Innovation",
+        "subtitle": "& Automation",
+        "description": "AI integration to optimize processes and custom systems development for incident management."
+      }
+    }
+  },
+  "FAQ": {
+    "badge": "FAQ",
+    "titlePrefix": "Frequently asked",
+    "titleBold": "questions",
+    "subtitle": "We answer the most common questions about our services and our way of working."
+  },
+  "Clientes": {
+    "badge": "Clients",
+    "titlePrefix": "Companies that",
+    "titleBold": "trust us",
+    "subtitle": "From public agencies to private companies, SIDEAS supports its clients with reliable, tailored IT solutions."
+  },
+  "Contacto": {
+    "titlePrefix": "Get in touch,",
+    "titleBold": "let's talk",
+    "subtitle": "We want to be the backbone of your ideas. Let's start building the technological future of your project together.",
+    "labelNombre": "Full Name",
+    "labelTelefono": "Phone",
+    "labelEmail": "Business Email",
+    "labelEmpresa": "Company",
+    "labelMensaje": "Your inquiry or project",
+    "placeholderNombre": "John Doe",
+    "placeholderTelefono": "+1 555 123 4567",
+    "placeholderEmail": "email@domain.com",
+    "placeholderEmpresa": "Your company name",
+    "placeholderMensaje": "Briefly tell us what you need...",
+    "errorNombre": "Name is required",
+    "errorEmail": "Enter a valid email",
+    "errorMensaje": "Message must be at least 10 characters",
+    "submitting": "Sending...",
+    "submit": "Request Consultation",
+    "successMsg": "Message sent successfully!",
+    "errorMsg": "There was a problem sending your message. Please try again.",
+    "mapTitle": "SIDEAS Location"
+  },
+  "QuienesSomos": {
+    "metaTitle": "About Us | SIDEAS Consultores",
+    "metaDescription": "Learn about SIDEAS Consultores: an IT company founded in 2020 in Córdoba, Argentina. +15 active clients, 24/7 support and 12 specialized services.",
+    "badge": "About Us",
+    "titlePrefix": "Your trusted",
+    "titleHighlight": "technology partner",
+    "paragraph1": "At SIDEAS we specialize in delivering comprehensive technology infrastructure solutions. Our team of professionals is committed to excellence and constant innovation.",
+    "paragraph2": "We work with the latest technologies to make sure your company has reliable, secure and scalable systems that drive your growth.",
+    "cta": "Learn more about us",
+    "statFounding": "Founded",
+    "statClients": "Active clients",
+    "statSupport": "Support available",
+    "statServices": "IT services"
+  },
+  "Servicios": {
+    "metaTitle": "IT Services | SIDEAS Consultores",
+    "metaDescription": "12 technology infrastructure services: Data Center, VoIP, MikroTik, Zabbix, Google Workspace, digital identity and more. 24/7 support in Córdoba, Argentina.",
+    "badge": "IT Services Catalog",
+    "titlePrefix": "Robust infrastructure",
+    "titleHighlight": "for your business",
+    "subtitle": "Explore our areas of expertise and discover how we can optimize your company's performance and security."
+  },
+  "ServiciosInteractivos": {
+    "catTodos": "All services",
+    "catInfra": "Infrastructure & Cloud",
+    "catSeguridad": "Security & Networks",
+    "catSoporte": "Support & Management",
+    "ctaTitle": "We design infrastructure tailored to you",
+    "ctaParagraph": "If your company has specific requirements, our engineering team is ready to put together an action plan.",
+    "ctaButton": "Contact an advisor"
+  },
+  "Proyectos": {
+    "metaTitle": "Projects | SIDEAS Consultores",
+    "metaDescription": "SIDEAS IT project portfolio: infrastructure solutions, AI agents, automation and more for Argentine companies.",
+    "titlePrefix": "Our",
+    "titleBold": "Projects",
+    "subtitle": "Success stories and technology solutions implemented to transform our clients' infrastructure and future.",
+    "verCasoExito": "View success story"
+  },
+  "ProyectosPreview": {
+    "badge": "Portfolio",
+    "titlePrefix": "Our",
+    "titleBold": "Projects",
+    "subtitle": "Success stories and technology solutions implemented to transform our clients' future.",
+    "verTodos": "View all projects"
+  },
+  "ProyectoDetalle": {
+    "volver": "Back to portfolio",
+    "ubicacion": "Location",
+    "anio": "Year",
+    "desafio": "Challenge",
+    "solucion": "Solution Implemented",
+    "resultados": "Results",
+    "visitarSitio": "Visit Website",
+    "vistaAlt": "{title} — view {n}",
+    "similarQuestion": "Have a similar project?",
+    "similarText": "Let's talk and find the right solution for your company.",
+    "solicitarAsesoramiento": "Request Consultation"
+  },
+  "Equipo": {
+    "metaTitle": "Our Team | SIDEAS Consultores",
+    "metaDescription": "Meet the SIDEAS Consultores team: IT infrastructure, systems, networking and cybersecurity professionals committed to excellence.",
+    "titlePrefix": "Our",
+    "titleBold": "Team",
+    "subtitle": "We combine technical expertise with a human approach so your ideas get the structure and dedication they deserve.",
+    "perfilNoDisponible": "Profile not available"
+  },
+  "Noticias": {
+    "metaTitle": "News & Blog | SIDEAS Consultores",
+    "metaDescription": "Articles, updates and resources on IT infrastructure, cybersecurity, automation and technology for businesses in Argentina.",
+    "badge": "News & Blog",
+    "titlePrefix": "Posts and",
+    "titleBold": "resources from SIDEAS",
+    "subtitle": "Articles, updates and insights on IT infrastructure, cybersecurity and enterprise technology.",
+    "emptyTitle": "No posts yet.",
+    "emptyText": "Once the first post is published from the CMS, it will show up here automatically.",
+    "backHome": "Back to home",
+    "featuredLabel": "Featured · {category}",
+    "readFull": "Read full article",
+    "morePosts": "More posts"
+  },
+  "NoticiaDetalle": {
+    "inicio": "Home",
+    "noticias": "News",
+    "volver": "Back to News",
+    "masArticulos": "More articles"
+  },
+  "NewsCard": {
+    "leerMas": "Read more"
+  },
+  "HomePage": {
+    "metaTitle": "SIDEAS Consultores | IT Infrastructure in Córdoba",
+    "metaDescription": "IT services company in Córdoba, Argentina. Data Center, 24/7 support, VoIP, MikroTik, Zabbix, Google Workspace and digital identity. Since 2020.",
+    "noticiasTitle": "News & Blog",
+    "noticiasKicker1": "The latest",
+    "noticiasKicker2": "news.",
+    "verTodosBlogs": "View all our posts",
+    "sinPublicaciones": "No posts yet.",
+    "cuandoSubas": "Once you publish the first post from the CMS, it will show up here automatically."
+  }
+}

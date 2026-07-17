@@ -1,10 +1,13 @@
-import Link from "next/link"
 import Image from "next/image"
-import { proyectos } from "@/data/proyectos"
+import { useLocale, useTranslations } from "next-intl"
+import { Link } from "@/i18n/navigation"
+import { getProyectos } from "@/data/proyectos"
 
 export default function ProyectosPreview() {
+    const t = useTranslations("ProyectosPreview")
+    const locale = useLocale()
     // Extraemos solo los primeros 3 proyectos para mostrar en el Home
-    const featuredProjects = proyectos.slice(0, 3)
+    const featuredProjects = getProyectos(locale).slice(0, 3)
 
     return (
         <section className="py-24 bg-white border-t border-slate-100">
@@ -15,14 +18,14 @@ export default function ProyectosPreview() {
                     <div className="max-w-2xl">
                         <div className="inline-flex items-center rounded-full border border-[#4398FF]/20 bg-[#4398FF]/5 px-3 py-1 mb-6">
                             <span className="text-[10px] font-bold tracking-widest uppercase text-[#0B3C78]">
-                                Portafolio
+                                {t("badge")}
                             </span>
                         </div>
                         <h2 className="text-4xl lg:text-5xl font-light text-slate-900 tracking-tight">
-                            Nuestros <span className="font-bold">Proyectos</span>
+                            {t("titlePrefix")} <span className="font-bold">{t("titleBold")}</span>
                         </h2>
                         <p className="mt-4 text-base text-slate-500">
-                            Casos de éxito y soluciones tecnológicas implementadas para transformar el futuro de nuestros clientes.
+                            {t("subtitle")}
                         </p>
                     </div>
 
@@ -30,7 +33,7 @@ export default function ProyectosPreview() {
                         href="/proyectos"
                         className="group shrink-0 inline-flex items-center gap-3 rounded-full bg-[#0F172A] px-6 py-3 text-sm font-bold text-white transition-all hover:bg-slate-800"
                     >
-                        Ver todos los proyectos
+                        {t("verTodos")}
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                         </svg>
@@ -42,7 +45,7 @@ export default function ProyectosPreview() {
                     {featuredProjects.map((project) => (
                         <Link
                             key={project.slug}
-                            href={`/proyectos/${project.slug}`}
+                            href={{ pathname: "/proyectos/[slug]", params: { slug: project.slug } }}
                             className="group flex flex-col rounded-[2rem] overflow-hidden bg-[#0F172A] shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-[#4398FF]/10"
                         >
                             {/* Imagen con difuminado inferior */}

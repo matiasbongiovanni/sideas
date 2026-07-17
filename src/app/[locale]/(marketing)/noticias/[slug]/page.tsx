@@ -1,14 +1,15 @@
 import type { Metadata } from "next"
 import Image from "next/image"
-import Link from "next/link"
 import { notFound } from "next/navigation"
+import { getTranslations } from "next-intl/server"
+import { Link } from "@/i18n/navigation"
 import { getPublishedNewsBySlug, listPublishedNews } from "@/lib/news.server"
 import { formatNewsDate, NEWS_DEFAULT_COVER } from "@/lib/news"
 import type { NewsPost } from "@/lib/news"
 import NewsCard from "@/features/blog/components/NewsCard"
 
 interface Props {
-  params: Promise<{ slug: string }>
+  params: Promise<{ locale: string; slug: string }>
 }
 
 export async function generateStaticParams() {
@@ -40,7 +41,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export const dynamic = "force-dynamic"
 
 export default async function NoticiaDetalle({ params }: Props) {
-  const { slug } = await params
+  const { locale, slug } = await params
+  const t = await getTranslations({ locale, namespace: "NoticiaDetalle" })
   let post = null
 
   try {
@@ -67,9 +69,9 @@ export default async function NoticiaDetalle({ params }: Props) {
       <article className="mx-auto max-w-4xl px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav className="mb-8 flex items-center gap-2 text-sm text-slate-500 flex-wrap">
-          <Link href="/" className="hover:text-[#0B3C78] transition-colors">Inicio</Link>
+          <Link href="/" className="hover:text-[#0B3C78] transition-colors">{t("inicio")}</Link>
           <span>/</span>
-          <Link href="/noticias" className="hover:text-[#0B3C78] transition-colors">Noticias</Link>
+          <Link href="/noticias" className="hover:text-[#0B3C78] transition-colors">{t("noticias")}</Link>
           <span>/</span>
           <span className="text-slate-900 font-medium truncate max-w-[200px]">{post.title}</span>
         </nav>
@@ -78,7 +80,7 @@ export default async function NoticiaDetalle({ params }: Props) {
           <span className="rounded-full bg-[#0B3C78] px-4 py-1 text-xs font-bold uppercase tracking-[0.24em] text-white">
             {post.category}
           </span>
-          <span className="text-sm text-slate-500">{formatNewsDate(post.published_at)}</span>
+          <span className="text-sm text-slate-500">{formatNewsDate(post.published_at, locale)}</span>
           <span className="text-sm text-slate-500">{post.author_name || "SIDEAS Consultores"}</span>
         </div>
 
@@ -107,7 +109,7 @@ export default async function NoticiaDetalle({ params }: Props) {
             href="/noticias"
             className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#0B3C78] to-[#4398FF] px-6 py-3 text-sm font-bold text-white shadow-lg hover:brightness-110 transition-all"
           >
-            ← Volver a Noticias
+            ← {t("volver")}
           </Link>
         </div>
       </article>
@@ -116,7 +118,7 @@ export default async function NoticiaDetalle({ params }: Props) {
       {related.length >= 2 && (
         <section className="mx-auto max-w-7xl px-6 lg:px-8 mt-20 pt-12 border-t border-slate-200">
           <h2 className="mb-8 text-xs font-bold uppercase tracking-[0.35em] text-slate-400">
-            Más artículos
+            {t("masArticulos")}
           </h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((p) => (

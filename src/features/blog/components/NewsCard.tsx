@@ -1,9 +1,12 @@
 import Image from "next/image"
-import Link from "next/link"
+import { useLocale, useTranslations } from "next-intl"
+import { Link } from "@/i18n/navigation"
 import type { NewsPost } from "@/lib/news"
 import { formatNewsDate, getExcerpt, NEWS_DEFAULT_COVER } from "@/lib/news"
 
 export default function NewsCard({ post }: { post: NewsPost }) {
+  const t = useTranslations("NewsCard")
+  const locale = useLocale()
   const cover = post.cover_image_url || NEWS_DEFAULT_COVER
 
   return (
@@ -25,7 +28,7 @@ export default function NewsCard({ post }: { post: NewsPost }) {
       <div className="flex flex-col gap-4 p-6">
         <div>
           <div className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
-            {formatNewsDate(post.published_at)}
+            {formatNewsDate(post.published_at, locale)}
           </div>
           <h3 className="mt-3 text-2xl font-semibold tracking-tight text-slate-950">
             {post.title}
@@ -40,10 +43,10 @@ export default function NewsCard({ post }: { post: NewsPost }) {
             {post.author_name || "SIDEAS Consultores"}
           </div>
           <Link
-            href={`/noticias/${post.slug}`}
+            href={{ pathname: "/noticias/[slug]", params: { slug: post.slug } }}
             className="inline-flex items-center gap-2 rounded-full bg-[#0B3C78] px-4 py-2 text-sm font-bold text-white transition-all duration-300 hover:bg-[#4398FF]"
           >
-            Leer más
+            {t("leerMas")}
             <span aria-hidden="true">→</span>
           </Link>
         </div>

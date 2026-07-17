@@ -1,21 +1,26 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { useTranslations } from "next-intl"
 
-const contactSchema = z.object({
-    nombre: z.string().min(1, "El nombre es requerido"),
-    telefono: z.string().optional(),
-    email: z.string().email("Ingresá un email válido"),
-    empresa: z.string().optional(),
-    mensaje: z.string().min(10, "El mensaje debe tener al menos 10 caracteres"),
-})
+function buildContactSchema(t: ReturnType<typeof useTranslations<"Contacto">>) {
+    return z.object({
+        nombre: z.string().min(1, t("errorNombre")),
+        telefono: z.string().optional(),
+        email: z.string().email(t("errorEmail")),
+        empresa: z.string().optional(),
+        mensaje: z.string().min(10, t("errorMensaje")),
+    })
+}
 
-type ContactFormData = z.infer<typeof contactSchema>
+type ContactFormData = z.infer<ReturnType<typeof buildContactSchema>>
 
 export default function Contacto() {
+    const t = useTranslations("Contacto")
+    const contactSchema = useMemo(() => buildContactSchema(t), [t])
     const {
         register,
         handleSubmit,
@@ -40,7 +45,7 @@ export default function Contacto() {
             setSuccess(true)
             reset()
         } catch {
-            setError("Hubo un problema al enviar el mensaje. Intentalo nuevamente.")
+            setError(t("errorMsg"))
         }
     }
 
@@ -53,10 +58,10 @@ export default function Contacto() {
                 {/* Header Sincronizado */}
                 <div className="text-center mb-16">
                     <h2 className="text-3xl font-light sm:text-4xl lg:text-5xl text-slate-900 tracking-tight">
-                        Contactanos y <span className="font-bold">hablemos</span>
+                        {t("titlePrefix")} <span className="font-bold">{t("titleBold")}</span>
                     </h2>
                     <p className="mt-4 text-base md:text-lg max-w-xl mx-auto text-slate-500 leading-relaxed">
-                        Queremos ser el respaldo de tus ideas. Empecemos a construir juntos el futuro tecnológico de tu proyecto.
+                        {t("subtitle")}
                     </p>
                 </div>
 
@@ -68,7 +73,7 @@ export default function Contacto() {
                             className="absolute inset-0 w-full h-full grayscale-[0.2] contrast-[1.1] transition-all duration-500 group-hover:grayscale-0"
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
-                            title="SIDEAS Ubicación"
+                            title={t("mapTitle")}
                         />
                     </div>
 
@@ -78,11 +83,11 @@ export default function Contacto() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">
-                                        Nombre Completo
+                                        {t("labelNombre")}
                                     </label>
                                     <input
                                         type="text"
-                                        placeholder="Juan Perez"
+                                        placeholder={t("placeholderNombre")}
                                         className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-5 py-4 text-sm outline-none transition-all focus:border-[#4398FF] focus:bg-white focus:ring-4 focus:ring-[#4398FF]/5"
                                         {...register("nombre")}
                                     />
@@ -90,11 +95,11 @@ export default function Contacto() {
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">
-                                        Teléfono
+                                        {t("labelTelefono")}
                                     </label>
                                     <input
                                         type="text"
-                                        placeholder="+54 11 1234 1543"
+                                        placeholder={t("placeholderTelefono")}
                                         className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-5 py-4 text-sm outline-none transition-all focus:border-[#4398FF] focus:bg-white focus:ring-4 focus:ring-[#4398FF]/5"
                                         {...register("telefono")}
                                     />
@@ -104,11 +109,11 @@ export default function Contacto() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">
-                                        Email Profesional
+                                        {t("labelEmail")}
                                     </label>
                                     <input
                                         type="email"
-                                        placeholder="email@dominio.com"
+                                        placeholder={t("placeholderEmail")}
                                         className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-5 py-4 text-sm outline-none transition-all focus:border-[#4398FF] focus:bg-white focus:ring-4 focus:ring-[#4398FF]/5"
                                         {...register("email")}
                                     />
@@ -116,11 +121,11 @@ export default function Contacto() {
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">
-                                        Empresa
+                                        {t("labelEmpresa")}
                                     </label>
                                     <input
                                         type="text"
-                                        placeholder="Nombre de tu empresa"
+                                        placeholder={t("placeholderEmpresa")}
                                         className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-5 py-4 text-sm outline-none transition-all focus:border-[#4398FF] focus:bg-white focus:ring-4 focus:ring-[#4398FF]/5"
                                         {...register("empresa")}
                                     />
@@ -129,12 +134,12 @@ export default function Contacto() {
 
                             <div className="space-y-2">
                                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">
-                                    Tu consulta o proyecto
+                                    {t("labelMensaje")}
                                 </label>
                                 <textarea
                                     rows={4}
                                     className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-5 py-4 text-sm outline-none transition-all focus:border-[#4398FF] focus:bg-white focus:ring-4 focus:ring-[#4398FF]/5 resize-none"
-                                    placeholder="Contanos brevemente qué necesitas..."
+                                    placeholder={t("placeholderMensaje")}
                                     {...register("mensaje")}
                                 />
                                 {errors.mensaje && <p className="text-[10px] font-bold text-red-500 ml-1 uppercase">{errors.mensaje.message}</p>}
@@ -146,7 +151,7 @@ export default function Contacto() {
                                     disabled={isSubmitting}
                                     className="group w-full flex items-center justify-center gap-3 rounded-full bg-gradient-to-r from-[#0B3C78] to-[#4398FF] px-8 py-4 text-sm font-bold text-white shadow-lg shadow-[#4398FF]/20 transition-all duration-300 hover:scale-[1.02] hover:shadow-[#4398FF]/40 disabled:opacity-50 disabled:scale-100"
                                 >
-                                    {isSubmitting ? "Enviando..." : "Solicitar asesoramiento"}
+                                    {isSubmitting ? t("submitting") : t("submit")}
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                     </svg>
@@ -154,7 +159,7 @@ export default function Contacto() {
                             </div>
 
                             {error && <p className="text-center text-xs font-bold text-red-500 uppercase">{error}</p>}
-                            {success && <p className="text-center text-xs font-bold text-green-600 uppercase tracking-widest animate-pulse">¡Mensaje enviado con éxito!</p>}
+                            {success && <p className="text-center text-xs font-bold text-green-600 uppercase tracking-widest animate-pulse">{t("successMsg")}</p>}
                         </form>
                     </div>
                 </div>

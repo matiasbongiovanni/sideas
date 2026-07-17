@@ -1,0 +1,217 @@
+{
+  "Metadata": {
+    "title": "SIDEAS Consultores | Infraestructura IT en Córdoba",
+    "titleTemplate": "%s | SIDEAS Consultores",
+    "description": "Empresa de servicios IT en Córdoba, Argentina. DataCenter, soporte 24/7, VoIP, MikroTik, Zabbix, Google Workspace e identidad digital. Desde 2020."
+  },
+  "Nav": {
+    "inicio": "Inicio",
+    "quienesSomos": "Quiénes Somos",
+    "servicios": "Servicios",
+    "proyectos": "Proyectos",
+    "noticias": "Noticias",
+    "equipo": "Equipo",
+    "contacto": "Contacto",
+    "verRecursos": "Ver Recursos",
+    "toggleMenu": "Alternar menú"
+  },
+  "Hero": {
+    "badge": "Ingeniería, Tecnología y Futuro",
+    "title1": "Soluciones",
+    "title2": "integrales y",
+    "title3": "personalizadas",
+    "subtitle": "Infraestructura & Sistemas",
+    "paragraph": "Integramos ingeniería, construcción de Data Centers y administración de servidores para garantizar entornos tecnológicos sólidos, seguros y escalables. Gestionamos almacenamiento, monitoreo y procesos de backup —tanto manuales como automáticos— con disponibilidad 24/7. Ofrecemos soluciones completas para PYMES de 50 a 200 puestos que buscan confiabilidad, alto rendimiento y continuidad operativa.",
+    "cta": "Ver recursos",
+    "locationLabel": "ESTAMOS EN:",
+    "growingNote": "...y seguimos creciendo."
+  },
+  "Timeline": {
+    "kicker1": "Evolución Tecnológica",
+    "titlePrefix": "Más de",
+    "titleBold": "30 años",
+    "description": "Acompañamos a las organizaciones en cada etapa de su transformación digital.",
+    "kicker2": "Áreas de Experiencia",
+    "title2Prefix": "Soluciones",
+    "title2Bold": "Destacadas",
+    "ariaSlider": "Slider de servicios",
+    "ariaPrev": "Anterior",
+    "ariaNext": "Siguiente",
+    "ariaGoTo": "Ir a servicio {n}",
+    "milestones": {
+      "y1995": "Nace Windows 95",
+      "y1998": "Expansión del USB e Internet",
+      "y2001": "Windows XP, la popularización de Windows",
+      "y2003": "Virtualización y Cloud: comienza la computación en la nube",
+      "y2007": "Smartphone iOS-Android: la revolución móvil",
+      "y2009": "SSD: mejora drástica en velocidad",
+      "y2015": "Windows 10: unifica dispositivos y nube",
+      "y2020": "Pandemia = Trabajo remoto",
+      "y2021": "Windows 11: más integración a la nube",
+      "y2022": "Inicia la transformación de la IA Generativa",
+      "y2026": "IA integrada: asistentes inteligentes multimodales"
+    },
+    "services": {
+      "infraestructura": {
+        "title": "Infraestructura",
+        "subtitle": "& Soporte IT",
+        "description": "Administración de servidores, Data Centers locales e híbridos, migraciones y soporte técnico con cobertura 24/7."
+      },
+      "redes": {
+        "title": "Redes",
+        "subtitle": "& Ciberseguridad",
+        "description": "Optimización de conectividad y protección de datos mediante Firewalls, VPNs seguras y soluciones antivirus centralizadas."
+      },
+      "resguardo": {
+        "title": "Resguardo",
+        "subtitle": "& Monitoreo",
+        "description": "Backups automáticos locales y en la nube. Monitoreo de recursos en tiempo real para prevenir fallas operativas."
+      },
+      "comunicaciones": {
+        "title": "Comunicaciones",
+        "subtitle": "& Plataformas",
+        "description": "Gestión de Telefonía IP, VoIP y despliegue de plataformas colaborativas y de identidad digital empresariales."
+      },
+      "innovacion": {
+        "title": "Innovación",
+        "subtitle": "& Automatización",
+        "description": "Integración de IA para optimizar procesos y desarrollo de sistemas a medida para la gestión de incidentes."
+      }
+    }
+  },
+  "FAQ": {
+    "badge": "FAQ",
+    "titlePrefix": "Preguntas",
+    "titleBold": "frecuentes",
+    "subtitle": "Resolvemos las dudas más comunes sobre nuestros servicios y procesos de trabajo."
+  },
+  "Clientes": {
+    "badge": "Clientes",
+    "titlePrefix": "Empresas que",
+    "titleBold": "confían en nosotros",
+    "subtitle": "Desde organismos públicos hasta empresas del sector privado, SIDEAS acompaña a sus clientes con soluciones IT confiables y a medida."
+  },
+  "Contacto": {
+    "titlePrefix": "Contactanos y",
+    "titleBold": "hablemos",
+    "subtitle": "Queremos ser el respaldo de tus ideas. Empecemos a construir juntos el futuro tecnológico de tu proyecto.",
+    "labelNombre": "Nombre Completo",
+    "labelTelefono": "Teléfono",
+    "labelEmail": "Email Profesional",
+    "labelEmpresa": "Empresa",
+    "labelMensaje": "Tu consulta o proyecto",
+    "placeholderNombre": "Juan Perez",
+    "placeholderTelefono": "+54 11 1234 1543",
+    "placeholderEmail": "email@dominio.com",
+    "placeholderEmpresa": "Nombre de tu empresa",
+    "placeholderMensaje": "Contanos brevemente qué necesitas...",
+    "errorNombre": "El nombre es requerido",
+    "errorEmail": "Ingresá un email válido",
+    "errorMensaje": "El mensaje debe tener al menos 10 caracteres",
+    "submitting": "Enviando...",
+    "submit": "Solicitar asesoramiento",
+    "successMsg": "¡Mensaje enviado con éxito!",
+    "errorMsg": "Hubo un problema al enviar el mensaje. Intentalo nuevamente.",
+    "mapTitle": "SIDEAS Ubicación"
+  },
+  "QuienesSomos": {
+    "metaTitle": "Quiénes Somos | SIDEAS Consultores",
+    "metaDescription": "Conocé la historia de SIDEAS Consultores: empresa IT fundada en 2020 en Córdoba, Argentina. +15 clientes activos, soporte 24/7 y 12 servicios especializados.",
+    "badge": "Quiénes Somos",
+    "titlePrefix": "Tu socio tecnológico",
+    "titleHighlight": "de confianza",
+    "paragraph1": "En SIDEAS nos especializamos en brindar soluciones integrales de infraestructura tecnológica. Nuestro equipo de profesionales está comprometido con la excelencia y la innovación constante.",
+    "paragraph2": "Trabajamos con las últimas tecnologías para garantizar que tu empresa cuente con sistemas confiables, seguros y escalables que impulsen tu crecimiento.",
+    "cta": "Conocenos más",
+    "statFounding": "Año de fundación",
+    "statClients": "Clientes activos",
+    "statSupport": "Soporte disponible",
+    "statServices": "Servicios IT"
+  },
+  "Servicios": {
+    "metaTitle": "Servicios IT | SIDEAS Consultores",
+    "metaDescription": "12 servicios de infraestructura tecnológica: DataCenter, VoIP, MikroTik, Zabbix, Google Workspace, identidad digital y más. Soporte 24/7 en Córdoba, Argentina.",
+    "badge": "Catálogo de Servicios IT",
+    "titlePrefix": "Infraestructura robusta",
+    "titleHighlight": "para tu negocio",
+    "subtitle": "Explorá nuestras áreas de especialización y descubrí cómo podemos optimizar el rendimiento y la seguridad de tu empresa."
+  },
+  "ServiciosInteractivos": {
+    "catTodos": "Todos los servicios",
+    "catInfra": "Infraestructura & Cloud",
+    "catSeguridad": "Seguridad & Redes",
+    "catSoporte": "Soporte & Gestión",
+    "ctaTitle": "Diseñamos infraestructura a tu medida",
+    "ctaParagraph": "Si tu empresa tiene requerimientos específicos, nuestro equipo de ingeniería está listo para armar un plan de acción.",
+    "ctaButton": "Contactar con un asesor"
+  },
+  "Proyectos": {
+    "metaTitle": "Proyectos | SIDEAS Consultores",
+    "metaDescription": "Portafolio de proyectos IT de SIDEAS: soluciones de infraestructura, agentes IA, automatización y más para empresas argentinas.",
+    "titlePrefix": "Nuestros",
+    "titleBold": "Proyectos",
+    "subtitle": "Casos de éxito y soluciones tecnológicas implementadas para transformar la infraestructura y el futuro de nuestros clientes.",
+    "verCasoExito": "Ver caso de éxito"
+  },
+  "ProyectosPreview": {
+    "badge": "Portafolio",
+    "titlePrefix": "Nuestros",
+    "titleBold": "Proyectos",
+    "subtitle": "Casos de éxito y soluciones tecnológicas implementadas para transformar el futuro de nuestros clientes.",
+    "verTodos": "Ver todos los proyectos"
+  },
+  "ProyectoDetalle": {
+    "volver": "Volver al portafolio",
+    "ubicacion": "Ubicación",
+    "anio": "Año",
+    "desafio": "Desafío",
+    "solucion": "Solución Implementada",
+    "resultados": "Resultados",
+    "visitarSitio": "Visitar Sitio Web",
+    "vistaAlt": "{title} — vista {n}",
+    "similarQuestion": "¿Tenés un proyecto similar?",
+    "similarText": "Hablemos y encontremos la solución para tu empresa.",
+    "solicitarAsesoramiento": "Solicitar asesoramiento"
+  },
+  "Equipo": {
+    "metaTitle": "Nuestro Equipo | SIDEAS Consultores",
+    "metaDescription": "Conocé al equipo de SIDEAS Consultores: profesionales en infraestructura IT, sistemas, redes y ciberseguridad comprometidos con la excelencia.",
+    "titlePrefix": "Nuestro",
+    "titleBold": "Equipo",
+    "subtitle": "Unimos nuestra experiencia técnica con un enfoque humano para que tus ideas tengan la estructura y la dedicación que se merecen.",
+    "perfilNoDisponible": "Perfil no disponible"
+  },
+  "Noticias": {
+    "metaTitle": "Noticias & Blog | SIDEAS Consultores",
+    "metaDescription": "Artículos, novedades y recursos sobre infraestructura IT, ciberseguridad, automatización y tecnología para empresas en Argentina.",
+    "badge": "Noticias & Blog",
+    "titlePrefix": "Publicaciones y",
+    "titleBold": "recursos de SIDEAS",
+    "subtitle": "Artículos, novedades y análisis sobre infraestructura IT, ciberseguridad y tecnología empresarial.",
+    "emptyTitle": "No hay publicaciones todavía.",
+    "emptyText": "Cuando se publique la primera noticia desde el CMS aparecerá aquí automáticamente.",
+    "backHome": "Volver al inicio",
+    "featuredLabel": "Destacado · {category}",
+    "readFull": "Leer artículo completo",
+    "morePosts": "Más publicaciones"
+  },
+  "NoticiaDetalle": {
+    "inicio": "Inicio",
+    "noticias": "Noticias",
+    "volver": "Volver a Noticias",
+    "masArticulos": "Más artículos"
+  },
+  "NewsCard": {
+    "leerMas": "Leer más"
+  },
+  "HomePage": {
+    "metaTitle": "SIDEAS Consultores | Infraestructura IT en Córdoba",
+    "metaDescription": "Empresa de servicios IT en Córdoba, Argentina. DataCenter, soporte 24/7, VoIP, MikroTik, Zabbix, Google Workspace e identidad digital. Desde 2020.",
+    "noticiasTitle": "Noticias & Blogs",
+    "noticiasKicker1": "Las noticias",
+    "noticiasKicker2": "más recientes.",
+    "verTodosBlogs": "Ver todos nuestros blogs",
+    "sinPublicaciones": "Aún no hay publicaciones.",
+    "cuandoSubas": "Cuando subas la primera noticia desde el CMS, aparecerá acá automáticamente."
+  }
+}

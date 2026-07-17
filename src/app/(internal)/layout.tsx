@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { localBusinessJsonLd } from "@/lib/seo";
-import { METADATA_BASE_URL } from "@/lib/constants";
+import type { Metadata } from "next"
+import { Inter } from "next/font/google"
+import "../globals.css"
+import { localBusinessJsonLd } from "@/lib/seo"
+import { METADATA_BASE_URL } from "@/lib/constants"
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
-});
+})
 
 export const metadata: Metadata = {
   title: {
@@ -25,12 +25,12 @@ export const metadata: Metadata = {
     images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },
   twitter: { card: "summary_large_image" },
-};
+}
 
-export default function RootLayout({
+export default function InternalRootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="es">
@@ -42,5 +42,5 @@ export default function RootLayout({
         />
       </body>
     </html>
-  );
+  )
 }

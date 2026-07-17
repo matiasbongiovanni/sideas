@@ -1,20 +1,21 @@
 import Image from "next/image"
-import Link from "next/link"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
-import { proyectos } from "@/data/proyectos"
+import { getTranslations } from "next-intl/server"
+import { Link } from "@/i18n/navigation"
+import { getProyectos } from "@/data/proyectos"
 
 // ─── Static Generation (Next.js best practice) ────────────────────────────────
 
 export async function generateStaticParams() {
-  return proyectos.map((p) => ({ slug: p.slug }))
+  return getProyectos("es").map((p) => ({ slug: p.slug }))
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { slug } = await params
-  const project = proyectos.find((p) => p.slug === slug)
+  const { locale, slug } = await params
+  const project = getProyectos(locale).find((p) => p.slug === slug)
   if (!project) return {}
   return {
     title: `${project.title} — SIDEAS Proyectos`,
@@ -25,12 +26,13 @@ export async function generateMetadata({
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 interface PageProps {
-  params: Promise<{ slug: string }>
+  params: Promise<{ locale: string; slug: string }>
 }
 
 export default async function ProyectoDetalle({ params }: PageProps) {
-  const { slug } = await params
-  const project = proyectos.find((p) => p.slug === slug)
+  const { locale, slug } = await params
+  const project = getProyectos(locale).find((p) => p.slug === slug)
+  const t = await getTranslations({ locale, namespace: "ProyectoDetalle" })
 
   if (!project) notFound()
 
@@ -80,7 +82,7 @@ export default async function ProyectoDetalle({ params }: PageProps) {
               />
             </svg>
           </span>
-          Volver al portafolio
+          {t("volver")}
         </Link>
 
         <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-12 lg:gap-20">
@@ -124,7 +126,7 @@ export default async function ProyectoDetalle({ params }: PageProps) {
             <div className="grid grid-cols-2 gap-6">
               <div>
                 <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500">
-                  Ubicación
+                  {t("ubicacion")}
                 </p>
                 <p className="text-sm font-medium text-slate-200">
                   {project.location}
@@ -132,7 +134,7 @@ export default async function ProyectoDetalle({ params }: PageProps) {
               </div>
               <div>
                 <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500">
-                  Año
+                  {t("anio")}
                 </p>
                 <p className="text-sm font-medium text-slate-200">
                   {project.year}
@@ -143,7 +145,7 @@ export default async function ProyectoDetalle({ params }: PageProps) {
             {/* Challenge */}
             <div>
               <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500">
-                Desafío
+                {t("desafio")}
               </p>
               <p className="text-sm leading-relaxed text-slate-400">
                 {project.challenge}
@@ -153,7 +155,7 @@ export default async function ProyectoDetalle({ params }: PageProps) {
             {/* Strategy */}
             <div>
               <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500">
-                Solución Implementada
+                {t("solucion")}
               </p>
               <p className="text-sm leading-relaxed text-slate-400">
                 {project.strategy}
@@ -164,7 +166,7 @@ export default async function ProyectoDetalle({ params }: PageProps) {
             {project.results && project.results.length > 0 && (
               <div>
                 <p className="mb-3 text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500">
-                  Resultados
+                  {t("resultados")}
                 </p>
                 <ul className="flex flex-col gap-2">
                   {project.results.map((r) => (
@@ -189,7 +191,7 @@ export default async function ProyectoDetalle({ params }: PageProps) {
                   rel="noopener noreferrer"
                   className="group inline-flex items-center gap-3 rounded-xl border border-blue-500/40 bg-gradient-to-r from-blue-600/20 to-blue-500/10 px-6 py-3.5 text-sm font-semibold text-blue-300 backdrop-blur-sm transition-all hover:border-blue-400/60 hover:bg-blue-500/20 hover:text-white"
                 >
-                  Visitar Sitio Web
+                  {t("visitarSitio")}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -226,7 +228,7 @@ export default async function ProyectoDetalle({ params }: PageProps) {
 
                 <Image
                   src={imgSrc}
-                  alt={`${project.title} — vista ${index + 1}`}
+                  alt={t("vistaAlt", { title: project.title, n: index + 1 })}
                   width={1200}
                   height={800}
                   priority={index === 0}
@@ -241,16 +243,16 @@ export default async function ProyectoDetalle({ params }: PageProps) {
             {/* Bottom CTA card */}
             <div className="mt-4 rounded-2xl border border-slate-700/60 bg-gradient-to-br from-slate-800/60 to-slate-900/60 p-8 backdrop-blur-sm">
               <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500">
-                ¿Tenés un proyecto similar?
+                {t("similarQuestion")}
               </p>
               <p className="mb-6 text-lg font-semibold text-white">
-                Hablemos y encontremos la solución para tu empresa.
+                {t("similarText")}
               </p>
               <Link
-                href="/#contacto"
+                href={{ pathname: "/", hash: "contacto" }}
                 className="inline-flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition-all hover:from-blue-500 hover:to-blue-400 hover:shadow-blue-500/30"
               >
-                Solicitar asesoramiento
+                {t("solicitarAsesoramiento")}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4"

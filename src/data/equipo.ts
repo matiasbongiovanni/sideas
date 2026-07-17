@@ -1,6 +1,6 @@
 import type { TeamMember } from "@/features/marketing/types"
 
-export const equipo: TeamMember[] = [
+const equipoEs: TeamMember[] = [
   {
     id: "roberto-acevedo",
     name: "Roberto Acevedo",
@@ -70,3 +70,20 @@ export const equipo: TeamMember[] = [
     photo: "/equipo/andrea-garcia.png",
   },
 ]
+
+const equipoEn: TeamMember[] = [
+  { ...equipoEs[0], role: "CEO & Founder" },
+  { ...equipoEs[1], role: "CTO" },
+  { ...equipoEs[2], role: "CIO" },
+  { ...equipoEs[3], role: "Infrastructure & IT Support Analyst" },
+  { ...equipoEs[4], role: "Project Developer" },
+  { ...equipoEs[5], role: "MikroTik Services Lead" },
+  { ...equipoEs[6], role: "MikroTik Services Lead" },
+  { ...equipoEs[7], role: "HR Analyst" },
+  { ...equipoEs[8], role: "Microsoft Infrastructure Specialist" },
+  { ...equipoEs[9], role: "Systems Analyst" },
+]
+
+export function getEquipo(locale: string): TeamMember[] {
+  return locale === "en" ? equipoEn : equipoEs
+}

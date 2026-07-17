@@ -1,14 +1,24 @@
 import type { Metadata } from "next"
+import { getTranslations } from "next-intl/server"
+import { useTranslations } from "next-intl"
 import Navbar from "@/features/marketing/components/Navbar"
 import ServiciosInteractivos from "./ServiciosInteractivos"
 
-export const metadata: Metadata = {
-  title: "Servicios IT | SIDEAS Consultores",
-  description:
-    "12 servicios de infraestructura tecnológica: DataCenter, VoIP, MikroTik, Zabbix, Google Workspace, identidad digital y más. Soporte 24/7 en Córdoba, Argentina.",
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: "Servicios" })
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+  }
 }
 
 export default function ServiciosPage() {
+  const t = useTranslations("Servicios")
   return (
     <main className="min-h-screen flex flex-col font-sans bg-white">
       <Navbar />
@@ -23,17 +33,17 @@ export default function ServiciosPage() {
         <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#4398FF]/30 bg-[#4398FF]/10 px-4 py-1.5 mb-6">
             <span className="text-[10px] font-bold tracking-widest uppercase text-[#4398FF]">
-              Catálogo de Servicios IT
+              {t("badge")}
             </span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-7xl font-light text-white tracking-tight leading-tight mb-6">
-            Infraestructura robusta <br className="hidden sm:block" />
-            <span className="font-bold text-[#4398FF]">para tu negocio</span>
+            {t("titlePrefix")} <br className="hidden sm:block" />
+            <span className="font-bold text-[#4398FF]">{t("titleHighlight")}</span>
           </h1>
 
           <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Explorá nuestras áreas de especialización y descubrí cómo podemos optimizar el rendimiento y la seguridad de tu empresa.
+            {t("subtitle")}
           </p>
         </div>
 

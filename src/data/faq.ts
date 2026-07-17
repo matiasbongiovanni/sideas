@@ -4,7 +4,7 @@ export interface FAQItem {
   answer: string
 }
 
-export const faq: FAQItem[] = [
+const faqEs: FAQItem[] = [
   {
     id: "por-que-sideas",
     question: "¿Por qué elegir SIDEAS como proveedor IT?",
@@ -60,3 +60,64 @@ export const faq: FAQItem[] = [
       "Planificamos cada migración con una ventana de mantenimiento acordada. Usamos snapshots y backups previos a cualquier cambio. Si el entorno lo permite, hacemos migraciones en paralelo (blue/green). Siempre tenemos un plan de rollback documentado y probado antes de ejecutar.",
   },
 ]
+
+const faqEn: FAQItem[] = [
+  {
+    id: "por-que-sideas",
+    question: "Why choose SIDEAS as your IT provider?",
+    answer:
+      "We're a Córdoba-based company focused on real results. Since 2020 we've provided 24/7 support with a team of certified professionals who understand the reality of SMBs and public agencies in the region. We don't outsource — we handle all support directly ourselves.",
+  },
+  {
+    id: "backups-resguardo",
+    question: "How do you handle backups and data protection?",
+    answer:
+      "We implement a 3-2-1 backup policy: three copies, on two different media, with one copy offsite. We use tools like Veeam, Acronis or native solutions depending on the environment. Every backup is verified automatically and you can check its status in real time.",
+  },
+  {
+    id: "mantenimiento-servidores",
+    question: "What does server maintenance include?",
+    answer:
+      "Maintenance includes: OS and firmware updates, event log review, temperature and hardware checks, disk space cleanup, verification of critical services and a monthly status report. Everything is documented and traceable.",
+  },
+  {
+    id: "modernizacion-infraestructura",
+    question: "Can you help us modernize our old infrastructure?",
+    answer:
+      "Yes. We have experience migrating legacy Windows systems, virtualizing with Hyper-V and VMware, and moving to the cloud (AWS, Azure). We work with a migration plan that minimizes downtime and guarantees a rollback path if anything goes wrong.",
+  },
+  {
+    id: "soporte-247",
+    question: "How does 24/7 support work?",
+    answer:
+      "We have an on-call system with technicians available around the clock. You can open a ticket via email, WhatsApp or our portal. For critical incidents (server down, security breach), first response time is under 15 minutes.",
+  },
+  {
+    id: "ciberseguridad-firewall",
+    question: "What cybersecurity solutions do you offer?",
+    answer:
+      "We implement perimeter firewalls (MikroTik, pfSense, Cisco), centralized antivirus with a management console, branch-to-branch VPN, password policies and multi-factor authentication (MFA). We also run vulnerability assessments and staff training.",
+  },
+  {
+    id: "datacenters",
+    question: "Do you design and build Data Centers from scratch?",
+    answer:
+      "Yes. We handle the site survey, electrical and cooling design, equipment selection (racks, UPS, PDU, servers), physical installation and commissioning. We include full documentation and training for your internal team's day-to-day operation.",
+  },
+  {
+    id: "monitoreo-alertas",
+    question: "What platform do you use for monitoring and alerts?",
+    answer:
+      "We use Zabbix as our main monitoring platform. It lets us oversee servers, networks, applications and services in real time. We configure alerts via email, SMS or Telegram so your team is notified before an issue affects users.",
+  },
+  {
+    id: "migraciones-upgrades",
+    question: "How do you manage migrations and upgrades without disrupting operations?",
+    answer:
+      "We plan every migration around an agreed maintenance window. We take snapshots and backups before any change. When the environment allows it, we run parallel (blue/green) migrations. We always have a documented, tested rollback plan before executing.",
+  },
+]
+
+export function getFaq(locale: string): FAQItem[] {
+  return locale === "en" ? faqEn : faqEs
+}

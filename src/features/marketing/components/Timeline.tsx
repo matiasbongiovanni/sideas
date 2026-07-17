@@ -2,80 +2,71 @@
 
 import { useState, useEffect, useRef, useCallback } from "react"
 import Image from "next/image"
+import { useTranslations } from "next-intl"
 
-const milestones = [
-    { year: "1995", text: "Nace Windows 95" },
-    { year: "1998", text: "Expansión del USB e Internet" },
-    { year: "2001", text: "Windows XP, la popularización de Windows" },
-    { year: "2003–2006", text: "Virtualización y Cloud: comienza la computación en la nube" },
-    { year: "2007–2008", text: "Smartphone iOS-Android: la revolución móvil" },
-    { year: "2009", text: "SSD: mejora drástica en velocidad" },
-    { year: "2015", text: "Windows 10: unifica dispositivos y nube" },
-    { year: "2020", text: "Pandemia = Trabajo remoto" },
-    { year: "2021", text: "Windows 11: más integración a la nube" },
-    { year: "2022", text: "Inicia la transformación de la IA Generativa" },
-    { year: "2026", text: "IA integrada: asistentes inteligentes multimodales" },
+const milestoneYears = [
+    "1995", "1998", "2001", "2003–2006", "2007–2008",
+    "2009", "2015", "2020", "2021", "2022", "2026",
+] as const
+
+const milestoneKeys = [
+    "y1995", "y1998", "y2001", "y2003", "y2007",
+    "y2009", "y2015", "y2020", "y2021", "y2022", "y2026",
+] as const
+
+const servicioIcons = [
+    (
+        <svg key="infraestructura" xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+        </svg>
+    ),
+    (
+        <svg key="redes" xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+        </svg>
+    ),
+    (
+        <svg key="resguardo" xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.75 3.75 0 0118 19.5H6.75z" />
+        </svg>
+    ),
+    (
+        <svg key="comunicaciones" xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.896-1.596-5.432-4.132-7.028-7.028l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+        </svg>
+    ),
+    (
+        <svg key="innovacion" xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+        </svg>
+    ),
 ]
 
-const servicios = [
-    {
-        icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-            </svg>
-        ),
-        title: "Infraestructura",
-        subtitle: "& Soporte IT",
-        description: "Administración de servidores, Data Centers locales e híbridos, migraciones y soporte técnico con cobertura 24/7.",
-        image: "/servicios/servidores2.webp"
-    },
-    {
-        icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-            </svg>
-        ),
-        title: "Redes",
-        subtitle: "& Ciberseguridad",
-        description: "Optimización de conectividad y protección de datos mediante Firewalls, VPNs seguras y soluciones antivirus centralizadas.",
-        image: "/servicios/ciberseguridad.webp"
-    },
-    {
-        icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.75 3.75 0 0118 19.5H6.75z" />
-            </svg>
-        ),
-        title: "Resguardo",
-        subtitle: "& Monitoreo",
-        description: "Backups automáticos locales y en la nube. Monitoreo de recursos en tiempo real para prevenir fallas operativas.",
-        image: "/servicios/zabbix-monitoreo.jpeg"
-    },
-    {
-        icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.896-1.596-5.432-4.132-7.028-7.028l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-            </svg>
-        ),
-        title: "Comunicaciones",
-        subtitle: "& Plataformas",
-        description: "Gestión de Telefonía IP, VoIP y despliegue de plataformas colaborativas y de identidad digital empresariales.",
-        image: "/servicios/datacenter.webp"
-    },
-    {
-        icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-            </svg>
-        ),
-        title: "Innovación",
-        subtitle: "& Automatización",
-        description: "Integración de IA para optimizar procesos y desarrollo de sistemas a medida para la gestión de incidentes.",
-        image: "/servicios/cloud.webp"
-    }
+const servicioKeys = ["infraestructura", "redes", "resguardo", "comunicaciones", "innovacion"] as const
+const servicioImages = [
+    "/servicios/servidores2.webp",
+    "/servicios/ciberseguridad.webp",
+    "/servicios/zabbix-monitoreo.jpeg",
+    "/servicios/datacenter.webp",
+    "/servicios/cloud.webp",
 ]
 
 export default function Timeline() {
+    const t = useTranslations("Timeline")
+
+    const milestones = milestoneYears.map((year, i) => ({
+        year,
+        text: t(`milestones.${milestoneKeys[i]}`),
+    }))
+
+    const servicios = servicioKeys.map((key, i) => ({
+        icon: servicioIcons[i],
+        title: t(`services.${key}.title`),
+        subtitle: t(`services.${key}.subtitle`),
+        description: t(`services.${key}.description`),
+        image: servicioImages[i],
+    }))
+
     const [currentService, setCurrentService] = useState(0)
     const [isPaused, setIsPaused] = useState(false)
     const [touchStart, setTouchStart] = useState<number | null>(null)
@@ -84,11 +75,11 @@ export default function Timeline() {
     const sliderRef = useRef<HTMLDivElement>(null)
 
     const nextSlide = useCallback(() => {
-        setCurrentService((prev) => (prev + 1) % servicios.length)
+        setCurrentService((prev) => (prev + 1) % servicioKeys.length)
     }, [])
 
     const prevSlide = useCallback(() => {
-        setCurrentService((prev) => (prev - 1 + servicios.length) % servicios.length)
+        setCurrentService((prev) => (prev - 1 + servicioKeys.length) % servicioKeys.length)
     }, [])
 
     useEffect(() => {
@@ -135,12 +126,12 @@ export default function Timeline() {
                     {/* Left – Timeline */}
                     <div className="flex flex-col justify-center">
                         <div className="mb-12">
-                            <h2 className="text-sm font-bold tracking-widest text-[#4398FF] uppercase mb-2">Evolución Tecnológica</h2>
+                            <h2 className="text-sm font-bold tracking-widest text-[#4398FF] uppercase mb-2">{t("kicker1")}</h2>
                             <h3 className="text-3xl lg:text-4xl font-light text-white">
-                                Más de <span className="font-bold">30 años</span>
+                                {t("titlePrefix")} <span className="font-bold">{t("titleBold")}</span>
                             </h3>
                             <p className="text-slate-400 mt-3 text-sm leading-relaxed">
-                                Acompañamos a las organizaciones en cada etapa de su transformación digital.
+                                {t("description")}
                             </p>
                         </div>
 
@@ -176,9 +167,9 @@ export default function Timeline() {
                     {/* Right – Featured service Slider */}
                     <div className="flex flex-col">
                         <div className="mb-6 hidden lg:block">
-                            <h2 className="text-sm font-bold tracking-widest text-[#4398FF] uppercase mb-2">Áreas de Experiencia</h2>
+                            <h2 className="text-sm font-bold tracking-widest text-[#4398FF] uppercase mb-2">{t("kicker2")}</h2>
                             <h3 className="text-3xl font-light text-white">
-                                Soluciones <span className="font-bold">Destacadas</span>
+                                {t("title2Prefix")} <span className="font-bold">{t("title2Bold")}</span>
                             </h3>
                         </div>
 
@@ -198,7 +189,7 @@ export default function Timeline() {
                             onTouchMove={onTouchMove}
                             onTouchEnd={onTouchEnd}
                             tabIndex={0}
-                            aria-label="Slider de servicios"
+                            aria-label={t("ariaSlider")}
                         >
                             {/* Imágenes */}
                             {servicios.map((s, idx) => (
@@ -241,7 +232,7 @@ export default function Timeline() {
                             <button
                                 onClick={(e) => { e.stopPropagation(); prevSlide(); }}
                                 className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-[#4398FF] backdrop-blur-md border border-white/20 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 hidden sm:flex"
-                                aria-label="Anterior"
+                                aria-label={t("ariaPrev")}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -250,7 +241,7 @@ export default function Timeline() {
                             <button
                                 onClick={(e) => { e.stopPropagation(); nextSlide(); }}
                                 className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-[#4398FF] backdrop-blur-md border border-white/20 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 hidden sm:flex"
-                                aria-label="Siguiente"
+                                aria-label={t("ariaNext")}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
@@ -288,7 +279,7 @@ export default function Timeline() {
                                                 setCurrentService(index)
                                             }}
                                             className={`h-1.5 rounded-full transition-all duration-300 ${index === currentService ? "w-8 bg-[#4398FF]" : "w-2 bg-white/40 hover:bg-white/70"}`}
-                                            aria-label={`Ir a servicio ${index + 1}`}
+                                            aria-label={t("ariaGoTo", { n: index + 1 })}
                                         />
                                     ))}
                                 </div>

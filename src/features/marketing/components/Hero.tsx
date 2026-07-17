@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import NextLink from "next/link"
+import { useTranslations } from "next-intl"
 
 interface Message {
   role: "user" | "bot"
@@ -13,6 +15,7 @@ const SUGERENCIAS_HERO = [
 ]
 
 export default function Inicio() {
+  const t = useTranslations("Hero")
   const [messages, setMessages] = useState<Message[]>([
     { role: "bot", text: "¡Hola! 👋 Bienvenido a SIDEAS Consultores. Estoy aquí para ayudarte con soluciones en infraestructura, ciberseguridad, servidores, backups y más. ¿En qué puedo asistirte hoy?" },
   ])
@@ -86,42 +89,36 @@ export default function Inicio() {
                         <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-[#4398FF]/30 bg-[#4398FF]/10 px-4 py-1.5 transition-colors hover:bg-[#4398FF]/20">
                             <span className="h-2 w-2 rounded-full bg-[#4398FF] animate-pulse" />
                             <span className="text-xs font-bold tracking-widest uppercase text-[#4398FF]">
-                                Ingeniería, Tecnología y Futuro
+                                {t("badge")}
                             </span>
                         </div>
 
                         {/* Título Principal */}
                         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light text-white tracking-tight leading-[1.1]">
-                            Soluciones<br />
-                            integrales y<br />
+                            {t("title1")}<br />
+                            {t("title2")}<br />
                             <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-[#4398FF]">
-                                personalizadas
+                                {t("title3")}
                             </span>
                         </h1>
 
                         <p className="mt-6 text-xl font-medium text-[#4398FF] tracking-wide">
-                            Infraestructura &amp; Sistemas
+                            {t("subtitle")}
                         </p>
 
                         <p className="mt-6 max-w-lg text-lg leading-relaxed text-slate-300">
-                            Integramos ingeniería, construcción de Data Centers y
-                            administración de servidores para garantizar entornos tecnológicos
-                            sólidos, seguros y escalables. Gestionamos almacenamiento,
-                            monitoreo y procesos de backup —tanto manuales como automáticos—
-                            con disponibilidad 24/7. Ofrecemos soluciones completas para PYMES
-                            de 50 a 200 puestos que buscan confiabilidad, alto rendimiento y
-                            continuidad operativa.
+                            {t("paragraph")}
                         </p>
 
-                        <a
+                        <NextLink
                             href="/login"
                             className="group mt-10 inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-[#0B3C78] to-[#4398FF] px-8 py-4 text-sm font-bold text-white shadow-lg shadow-[#4398FF]/20 transition-all duration-300 hover:scale-105 hover:shadow-[#4398FF]/40"
                         >
-                            Ver recursos
+                            {t("cta")}
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                             </svg>
-                        </a>
+                        </NextLink>
                     </div>
 
                     {/* Columna Derecha – Chatbot Funcional */}
@@ -217,12 +214,12 @@ export default function Inicio() {
                             </svg>
                         </div>
                         <p className="text-sm font-medium text-slate-300 text-center sm:text-left leading-relaxed tracking-wide">
-                            <span className="font-bold text-white tracking-widest mr-2">ESTAMOS EN:</span>
+                            <span className="font-bold text-white tracking-widest mr-2">{t("locationLabel")}</span>
                             <span className="text-[#4398FF] font-semibold">CÓRDOBA</span> <span className="text-slate-600 mx-1">/</span>
                             <span className="text-[#4398FF] font-semibold">NEUQUÉN</span> <span className="text-slate-600 mx-1">/</span>
                             <span className="text-[#4398FF] font-semibold">SANTA FE</span> <span className="text-slate-600 mx-1">/</span>
                             <span className="text-[#4398FF] font-semibold">BUENOS AIRES</span>
-                            <span className="hidden md:inline text-slate-400 italic ml-2">...y seguimos creciendo.</span>
+                            <span className="hidden md:inline text-slate-400 italic ml-2">{t("growingNote")}</span>
                         </p>
                     </div>
                 </div>

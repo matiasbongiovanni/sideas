@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Image from "next/image"
-import Link from "next/link"
+import { getTranslations } from "next-intl/server"
+import { Link } from "@/i18n/navigation"
 import NewsCard from "@/features/blog/components/NewsCard"
 import type { NewsPost } from "@/lib/news"
 import { listPublishedNews } from "@/lib/news.server"
@@ -8,12 +9,26 @@ import { formatNewsDate, getExcerpt, NEWS_DEFAULT_COVER } from "@/lib/news"
 
 export const dynamic = "force-dynamic"
 
-export const metadata: Metadata = {
-  title: "Noticias & Blog | SIDEAS Consultores",
-  description: "Artículos, novedades y recursos sobre infraestructura IT, ciberseguridad, automatización y tecnología para empresas en Argentina.",
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: "Noticias" })
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+  }
 }
 
-export default async function NoticiasPage() {
+export default async function NoticiasPage({
+  params,
+}: {
+  params: Promise<{ locale: "es" | "en" }>
+}) {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: "Noticias" })
   let posts: NewsPost[] = []
   try {
     posts = await listPublishedNews()
@@ -34,15 +49,15 @@ export default async function NoticiasPage() {
         <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#4398FF]/30 bg-[#4398FF]/10 px-4 py-1.5 mb-6">
             <span className="text-[10px] font-bold tracking-widest uppercase text-[#4398FF]">
-              Noticias & Blog
+              {t("badge")}
             </span>
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-7xl font-light text-white tracking-tight leading-tight mb-6">
-            Publicaciones y <br className="hidden sm:block" />
-            <span className="font-bold text-[#4398FF]">recursos de SIDEAS</span>
+            {t("titlePrefix")} <br className="hidden sm:block" />
+            <span className="font-bold text-[#4398FF]">{t("titleBold")}</span>
           </h1>
           <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Artículos, novedades y análisis sobre infraestructura IT, ciberseguridad y tecnología empresarial.
+            {t("subtitle")}
           </p>
         </div>
 
@@ -53,12 +68,12 @@ export default async function NoticiasPage() {
       <section className="mx-auto w-full max-w-7xl px-6 lg:px-8 py-16">
         {posts.length === 0 ? (
           <div className="rounded-[32px] border border-slate-200 bg-white p-12 text-center shadow-sm">
-            <p className="text-xl font-semibold text-slate-950">No hay publicaciones todavía.</p>
+            <p className="text-xl font-semibold text-slate-950">{t("emptyTitle")}</p>
             <p className="mt-2 text-sm text-slate-500">
-              Cuando se publique la primera noticia desde el CMS aparecerá aquí automáticamente.
+              {t("emptyText")}
             </p>
             <Link href="/" className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#0B3C78] to-[#4398FF] px-6 py-3 text-sm font-bold text-white shadow-lg hover:brightness-110 transition-all">
-              Volver al inicio
+              {t("backHome")}
             </Link>
           </div>
         ) : (
@@ -76,12 +91,12 @@ export default async function NoticiasPage() {
                       unoptimized
                     />
                     <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.28em] text-[#0B3C78] backdrop-blur">
-                      Destacado · {featured.category}
+                      {t("featuredLabel", { category: featured.category })}
                     </div>
                   </div>
                   <div className="flex flex-col justify-center gap-5 p-8 lg:p-12">
                     <div className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
-                      {formatNewsDate(featured.published_at)} · {featured.author_name || "SIDEAS Consultores"}
+                      {formatNewsDate(featured.published_at, locale)} · {featured.author_name || "SIDEAS Consultores"}
                     </div>
                     <h2 className="text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl lg:text-4xl">
                       {featured.title}
@@ -91,10 +106,10 @@ export default async function NoticiasPage() {
                     </p>
                     <div>
                       <Link
-                        href={`/noticias/${featured.slug}`}
+                        href={{ pathname: "/noticias/[slug]", params: { slug: featured.slug } }}
                         className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#0B3C78] to-[#4398FF] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[#4398FF]/20 transition-all hover:brightness-110"
                       >
-                        Leer artículo completo
+                        {t("readFull")}
                         <span aria-hidden="true">→</span>
                       </Link>
                     </div>
@@ -107,7 +122,7 @@ export default async function NoticiasPage() {
             {rest.length > 0 && (
               <div>
                 <h2 className="mb-8 text-xs font-bold uppercase tracking-[0.35em] text-slate-400">
-                  Más publicaciones
+                  {t("morePosts")}
                 </h2>
                 <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
                   {rest.map((post) => (

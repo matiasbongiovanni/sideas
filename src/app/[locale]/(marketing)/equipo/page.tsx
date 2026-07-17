@@ -1,12 +1,21 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { equipo } from "@/data/equipo"
+import { getTranslations } from "next-intl/server"
+import { useLocale, useTranslations } from "next-intl"
+import { getEquipo } from "@/data/equipo"
 
-export const metadata: Metadata = {
-    title: "Nuestro Equipo | SIDEAS Consultores",
-    description:
-        "Conocé al equipo de SIDEAS Consultores: profesionales en infraestructura IT, sistemas, redes y ciberseguridad comprometidos con la excelencia.",
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+    const { locale } = await params
+    const t = await getTranslations({ locale, namespace: "Equipo" })
+    return {
+        title: t("metaTitle"),
+        description: t("metaDescription"),
+    }
 }
 
 function getInitials(name: string) {
@@ -19,6 +28,9 @@ function getInitials(name: string) {
 }
 
 export default function Equipo() {
+    const t = useTranslations("Equipo")
+    const locale = useLocale()
+    const equipo = getEquipo(locale)
     return (
         <section id="equipo" className="relative py-24 bg-slate-50 overflow-hidden border-t border-slate-200/60">
             {/* Elementos decorativos de fondo sutiles */}
@@ -33,12 +45,11 @@ export default function Equipo() {
                     </div>
 
                     <h2 className="text-3xl font-light sm:text-4xl lg:text-5xl text-slate-900 tracking-tight mb-4">
-                        Nuestro <span className="font-bold">Equipo</span>
+                        {t("titlePrefix")} <span className="font-bold">{t("titleBold")}</span>
                     </h2>
 
                     <p className="text-base md:text-lg max-w-2xl mx-auto text-slate-500 leading-relaxed">
-                        Unimos nuestra experiencia técnica con un enfoque humano para que tus
-                        ideas tengan la estructura y la dedicación que se merecen.
+                        {t("subtitle")}
                     </p>
                 </div>
 
@@ -94,7 +105,7 @@ export default function Equipo() {
                                 ) : (
                                     // Placeholder o mensaje si no hay LinkedIn, para mantener la altura
                                     <div className="h-9 flex items-center justify-center">
-                                        <span className="text-xs text-slate-400 italic">Perfil no disponible</span>
+                                        <span className="text-xs text-slate-400 italic">{t("perfilNoDisponible")}</span>
                                     </div>
                                 )}
                             </div>

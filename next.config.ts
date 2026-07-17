@@ -1,4 +1,7 @@
 import type { NextConfig } from "next"
+import createNextIntlPlugin from "next-intl/plugin"
+
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts")
 
 // Shared across all routes
 const commonHeaders = [
@@ -75,6 +78,17 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      { source: "/quienes-somos", destination: "/es/quienes-somos", permanent: true },
+      { source: "/servicios", destination: "/es/servicios", permanent: true },
+      { source: "/proyectos", destination: "/es/proyectos", permanent: true },
+      { source: "/proyectos/:slug", destination: "/es/proyectos/:slug", permanent: true },
+      { source: "/equipo", destination: "/es/equipo", permanent: true },
+      { source: "/noticias", destination: "/es/noticias", permanent: true },
+      { source: "/noticias/:slug", destination: "/es/noticias/:slug", permanent: true },
+    ]
+  },
 }
 
-export default nextConfig
+export default withNextIntl(nextConfig)

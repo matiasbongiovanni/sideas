@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import Marquee from "react-fast-marquee"
+import { useTranslations } from "next-intl"
 import { clientes } from "@/data/clientes"
 
 function ClienteLogo({ name, logo, wide }: { name: string; logo: string | null; wide?: boolean }) {
@@ -22,20 +23,21 @@ function ClienteLogo({ name, logo, wide }: { name: string; logo: string | null; 
 }
 
 export default function ClientesGrid() {
+  const t = useTranslations("Clientes")
   return (
     <section className="relative py-24 bg-white overflow-hidden border-t border-slate-100">
       {/* Contenedor de Texto */}
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 text-center mb-16">
         <div className="inline-flex items-center gap-2 rounded-full border border-[#0B3C78]/20 bg-[#0B3C78]/5 px-4 py-1.5 mb-6 transition-colors hover:bg-[#0B3C78]/10">
-          <span className="text-xs font-bold tracking-widest uppercase text-[#0B3C78]">Clientes</span>
+          <span className="text-xs font-bold tracking-widest uppercase text-[#0B3C78]">{t("badge")}</span>
         </div>
 
         <h2 className="text-3xl font-light sm:text-4xl lg:text-5xl text-slate-900 tracking-tight mb-6">
-          Empresas que <span className="font-bold">confían en nosotros</span>
+          {t("titlePrefix")} <span className="font-bold">{t("titleBold")}</span>
         </h2>
 
         <p className="text-base md:text-lg max-w-2xl mx-auto text-slate-500 leading-relaxed">
-          Desde organismos públicos hasta empresas del sector privado, SIDEAS acompaña a sus clientes con soluciones IT confiables y a medida.
+          {t("subtitle")}
         </p>
       </div>
 

@@ -1,7 +1,10 @@
 import Image from "next/image"
+import { useTranslations } from "next-intl"
+import { Link } from "@/i18n/navigation"
 import { NAV_LINKS, SOCIAL_LINKS } from "@/lib/constants"
 
 export default function Footer() {
+    const t = useTranslations("Nav")
     const currentYear = new Date().getFullYear()
 
     return (
@@ -19,14 +22,14 @@ export default function Footer() {
             {/* Nav links */}
             <div className="flex flex-wrap items-center justify-center gap-6 mb-8">
                 {NAV_LINKS.map((item) => (
-                    <a
-                        key={item.label}
+                    <Link
+                        key={item.key}
                         href={item.href}
                         className="text-sm transition-colors hover:opacity-80"
                         style={{ color: "#FFFFFF" }}
                     >
-                        {item.label}
-                    </a>
+                        {t(item.key)}
+                    </Link>
                 ))}
             </div>
 

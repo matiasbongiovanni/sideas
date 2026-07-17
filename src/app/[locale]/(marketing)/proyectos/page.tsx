@@ -1,16 +1,28 @@
 import type { Metadata } from "next"
 import Image from "next/image"
-import Link from "next/link"
-import { proyectos } from "@/data/proyectos"
+import { getTranslations } from "next-intl/server"
+import { useLocale, useTranslations } from "next-intl"
+import { Link } from "@/i18n/navigation"
+import { getProyectos } from "@/data/proyectos"
 import Navbar from "@/features/marketing/components/Navbar"
 
-export const metadata: Metadata = {
-    title: "Proyectos | SIDEAS Consultores",
-    description:
-        "Portafolio de proyectos IT de SIDEAS: soluciones de infraestructura, agentes IA, automatización y más para empresas argentinas.",
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+    const { locale } = await params
+    const t = await getTranslations({ locale, namespace: "Proyectos" })
+    return {
+        title: t("metaTitle"),
+        description: t("metaDescription"),
+    }
 }
 
 export default function Proyectos() {
+    const t = useTranslations("Proyectos")
+    const locale = useLocale()
+    const proyectos = getProyectos(locale)
     return (
         <main className="min-h-screen flex flex-col font-sans">
             <Navbar />
@@ -23,11 +35,11 @@ export default function Proyectos() {
 
                 <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-8 text-center">
                     <h1 className="text-4xl sm:text-5xl lg:text-7xl font-light text-white tracking-tight leading-tight mb-6">
-                        Nuestros <span className="font-bold">Proyectos</span>
+                        {t("titlePrefix")} <span className="font-bold">{t("titleBold")}</span>
                     </h1>
 
                     <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-                        Casos de éxito y soluciones tecnológicas implementadas para transformar la infraestructura y el futuro de nuestros clientes.
+                        {t("subtitle")}
                     </p>
                 </div>
 
@@ -46,7 +58,7 @@ export default function Proyectos() {
                                     className={`flex flex-col gap-10 lg:gap-16 items-center ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}
                                 >
                                     <div className="w-full lg:w-1/2 relative group">
-                                        <Link href={`/proyectos/${project.slug}`} className="block relative aspect-[4/3] rounded-[2rem] overflow-hidden shadow-xl shadow-slate-200/60 border border-slate-200">
+                                        <Link href={{ pathname: "/proyectos/[slug]", params: { slug: project.slug } }} className="block relative aspect-[4/3] rounded-[2rem] overflow-hidden shadow-xl shadow-slate-200/60 border border-slate-200">
                                             <div className="absolute inset-0 bg-slate-900/10 group-hover:bg-transparent transition-colors duration-500 z-10 pointer-events-none" />
 
                                             <Image
@@ -71,7 +83,7 @@ export default function Proyectos() {
                                             ))}
                                         </div>
 
-                                        <Link href={`/proyectos/${project.slug}`}>
+                                        <Link href={{ pathname: "/proyectos/[slug]", params: { slug: project.slug } }}>
                                             <h3 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-5 hover:text-[#4398FF] transition-colors">
                                                 {project.title}
                                             </h3>
@@ -82,10 +94,10 @@ export default function Proyectos() {
                                         </p>
 
                                         <Link
-                                            href={`/proyectos/${project.slug}`}
+                                            href={{ pathname: "/proyectos/[slug]", params: { slug: project.slug } }}
                                             className="group inline-flex items-center gap-3 rounded-full bg-white border border-slate-200 px-6 py-3 text-sm font-bold text-slate-700 shadow-sm transition-all hover:-translate-y-1 hover:border-[#4398FF]/30 hover:shadow-md hover:text-[#4398FF]"
                                         >
-                                            Ver caso de éxito
+                                            {t("verCasoExito")}
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                             </svg>

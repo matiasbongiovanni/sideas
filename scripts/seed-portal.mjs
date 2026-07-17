@@ -46,6 +46,7 @@ const SEED_PASSWORDS = {
   etorres:   process.env.SEED_PASSWORD_ETORRES,
   grui:      process.env.SEED_PASSWORD_GRUI,
   pgonzalez: process.env.SEED_PASSWORD_PGONZALEZ,
+  fbenitez:  process.env.SEED_PASSWORD_FBENITEZ,
 }
 
 const missingPasswords = Object.entries(SEED_PASSWORDS).filter(([, v]) => !v).map(([k]) => k)
@@ -59,6 +60,7 @@ const USERS = [
   { username: "etorres",   full_name: "Ezequiel Torres",  password: SEED_PASSWORDS.etorres   },
   { username: "grui",      full_name: "Gerardo Rui",      password: SEED_PASSWORDS.grui      },
   { username: "pgonzalez", full_name: "Pablo González",   password: SEED_PASSWORDS.pgonzalez },
+  { username: "fbenitez",  full_name: "Franco Benitez",   password: SEED_PASSWORDS.fbenitez  },
 ]
 
 const CLIENT = { name: "Ingenia SA — Jesús María", slug: "ingenia-jesus-maria" }
@@ -243,11 +245,11 @@ async function main() {
 
   console.log("\n✅  Seed completado.\n")
   console.log("Verificar en Supabase:")
-  console.log("  - Auth > Users: 4 usuarios con email @" + EMAIL_DOMAIN)
-  console.log("  - Table portal_profiles: 4 filas")
+  console.log("  - Auth > Users: 5 usuarios con email @" + EMAIL_DOMAIN)
+  console.log("  - Table portal_profiles: 5 filas")
   console.log("  - Table portal_clients: 1 fila (ingenia-jesus-maria)")
   console.log("  - Table portal_endpoints: 2 filas (inventario + zabbix)")
-  console.log("  - Table portal_credentials: 5 filas (4 per-user inventario + 1 shared zabbix)")
+  console.log("  - Table portal_credentials: 6 filas (5 per-user inventario + 1 shared zabbix)")
 }
 
 main().catch((err) => {

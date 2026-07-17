@@ -1,8 +1,12 @@
 "use client"
 import { useState } from "react"
-import { faq } from "@/data/faq"
+import { useLocale, useTranslations } from "next-intl"
+import { getFaq } from "@/data/faq"
 
 export default function FAQ() {
+  const t = useTranslations("FAQ")
+  const locale = useLocale()
+  const faq = getFaq(locale)
   const [open, setOpen] = useState<string | null>(null)
 
   const toggle = (id: string) => setOpen((prev) => (prev === id ? null : id))
@@ -16,15 +20,15 @@ export default function FAQ() {
         {/* Header Sincronizado */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#0B3C78]/20 bg-[#0B3C78]/5 px-4 py-1.5 mb-6 transition-colors hover:bg-[#0B3C78]/10">
-            <span className="text-xs font-bold tracking-widest uppercase text-[#0B3C78]">FAQ</span>
+            <span className="text-xs font-bold tracking-widest uppercase text-[#0B3C78]">{t("badge")}</span>
           </div>
 
           <h2 className="text-3xl font-light sm:text-4xl lg:text-5xl text-slate-900 tracking-tight mb-4">
-            Preguntas <span className="font-bold">frecuentes</span>
+            {t("titlePrefix")} <span className="font-bold">{t("titleBold")}</span>
           </h2>
 
           <p className="text-base md:text-lg max-w-xl mx-auto text-slate-500 leading-relaxed">
-            Resolvemos las dudas más comunes sobre nuestros servicios y procesos de trabajo.
+            {t("subtitle")}
           </p>
         </div>
 
