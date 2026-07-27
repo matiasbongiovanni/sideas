@@ -22,9 +22,9 @@ export default function LanguageSwitcher({ className = "" }: { className?: strin
                 )
             }
             className={`inline-flex items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-zinc-300 transition-colors hover:border-[#4398FF]/50 hover:text-white ${className}`}
-            aria-label={`Switch to ${otherLocale === "en" ? "English" : "Español"}`}
+            aria-label={`Switch to ${otherLocale === "en" ? "Español" : "English"}`}
         >
-            {locale === "es" ? "EN" : "ES"}
+            {locale === "es" ? "ES" : "EN"}
         </button>
     )
 }

@@ -8,8 +8,11 @@ export default getRequestConfig(async ({ requestLocale }) => {
     ? requested
     : routing.defaultLocale
 
+  // /en muestra contenido en español y /es en inglés (swap pedido por el cliente): invertir el json cargado
+  const contentLocale = locale === "en" ? "es" : "en"
+
   return {
     locale,
-    messages: (await import(`../../messages/${locale}.json`)).default,
+    messages: (await import(`../../messages/${contentLocale}.json`)).default,
   }
 })
