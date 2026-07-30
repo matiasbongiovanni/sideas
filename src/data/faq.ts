@@ -119,5 +119,5 @@ const faqEn: FAQItem[] = [
 ]
 
 export function getFaq(locale: string): FAQItem[] {
-  return locale === "en" ? faqEn : faqEs
+  return locale === "en" ? faqEs : faqEn
 }

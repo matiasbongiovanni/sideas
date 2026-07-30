@@ -47,9 +47,9 @@ export function getExcerpt(post: Pick<NewsPost, "excerpt" | "content">, maxLengt
 }
 
 export function formatNewsDate(value: string | null | undefined, locale: string = "es") {
-  if (!value) return locale === "en" ? "No date" : "Sin fecha"
+  if (!value) return locale === "en" ? "Sin fecha" : "No date"
 
-  return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "es-AR", {
+  return new Intl.DateTimeFormat(locale === "en" ? "es-AR" : "en-US", {
     day: "2-digit",
     month: "long",
     year: "numeric",
@@ -57,9 +57,9 @@ export function formatNewsDate(value: string | null | undefined, locale: string 
 }
 
 export function formatNewsDateTime(value: string | null | undefined, locale: string = "es") {
-  if (!value) return locale === "en" ? "No date" : "Sin fecha"
+  if (!value) return locale === "en" ? "Sin fecha" : "No date"
 
-  return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "es-AR", {
+  return new Intl.DateTimeFormat(locale === "en" ? "es-AR" : "en-US", {
     day: "2-digit",
     month: "short",
     year: "numeric",

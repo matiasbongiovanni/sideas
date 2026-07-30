@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { isAdminEmail } from "@/lib/admin"
+import { isAsistenteEmail } from "@/lib/asistente/allowlist"
 
 const PORTAL_EMAIL_DOMAIN = process.env.PORTAL_EMAIL_DOMAIN || "portal.sideasconsultores.com.ar"
 
@@ -64,6 +65,34 @@ export async function adminLogout() {
     await supabase.auth.signOut()
     revalidatePath("/", "layout")
     redirect("/admin/login")
+}
+
+export async function asistenteLogin(prevState: { error: string | null }, formData: FormData) {
+    const supabase = await createClient()
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: formData.get("email") as string,
+        password: formData.get("password") as string,
+    })
+
+    if (error) {
+        return { error: "Credenciales incorrectas. Verificá tu email y contraseña." }
+    }
+
+    if (!isAsistenteEmail(data.user.email)) {
+        await supabase.auth.signOut()
+        return { error: "No tenés permisos para acceder al asistente personal." }
+    }
+
+    revalidatePath("/", "layout")
+    redirect("/asistente")
+}
+
+export async function asistenteLogout() {
+    const supabase = await createClient()
+    await supabase.auth.signOut()
+    revalidatePath("/", "layout")
+    redirect("/asistente/login")
 }
 
 export async function getUser() {

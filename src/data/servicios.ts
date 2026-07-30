@@ -205,5 +205,5 @@ const serviciosEn: Servicio[] = [
 ]
 
 export function getServicios(locale: string): Servicio[] {
-  return locale === "en" ? serviciosEn : serviciosEs
+  return locale === "en" ? serviciosEs : serviciosEn
 }

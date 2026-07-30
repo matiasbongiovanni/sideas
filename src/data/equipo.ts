@@ -85,5 +85,5 @@ const equipoEn: TeamMember[] = [
 ]
 
 export function getEquipo(locale: string): TeamMember[] {
-  return locale === "en" ? equipoEn : equipoEs
+  return locale === "en" ? equipoEs : equipoEn
 }

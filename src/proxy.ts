@@ -3,6 +3,7 @@ import { createServerClient } from "@supabase/ssr"
 import createMiddleware from "next-intl/middleware"
 import { routing } from "@/i18n/routing"
 import { isAdminEmail } from "@/lib/admin"
+import { isAsistenteEmail } from "@/lib/asistente/allowlist"
 
 const handleI18nRouting = createMiddleware(routing)
 
@@ -54,6 +55,22 @@ export async function proxy(request: NextRequest) {
     }
   }
 
+  // Módulo Asistente Personal: sin sesión → login propio
+  if (!user && pathname.startsWith("/asistente") && !pathname.startsWith("/asistente/login")) {
+    const loginUrl = request.nextUrl.clone()
+    loginUrl.pathname = "/asistente/login"
+    return NextResponse.redirect(loginUrl)
+  }
+
+  // Allowlist separada del admin de SIDEAS — es de uso exclusivo de Mati
+  if (user && pathname.startsWith("/asistente") && !pathname.startsWith("/asistente/login")) {
+    if (!isAsistenteEmail(user.email)) {
+      const loginUrl = request.nextUrl.clone()
+      loginUrl.pathname = "/asistente/login"
+      return NextResponse.redirect(loginUrl)
+    }
+  }
+
   return response
 }
 
@@ -64,5 +81,6 @@ export const config = {
     "/dashboard/:path*",
     "/portal/:path*",
     "/admin/:path*",
+    "/asistente/:path*",
   ],
 }

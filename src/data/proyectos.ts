@@ -249,5 +249,5 @@ const proyectosEn: Project[] = [
 ]
 
 export function getProyectos(locale: string): Project[] {
-  return locale === "en" ? proyectosEn : proyectosEs
+  return locale === "en" ? proyectosEs : proyectosEn
 }

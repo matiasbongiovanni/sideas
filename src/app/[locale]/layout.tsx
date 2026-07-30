@@ -35,7 +35,7 @@ export async function generateMetadata({
     metadataBase: new URL(METADATA_BASE_URL),
     openGraph: {
       siteName: "SIDEAS Consultores",
-      locale: locale === "en" ? "en_US" : "es_AR",
+      locale: locale === "en" ? "es_AR" : "en_US",
       type: "website",
       images: [{ url: "/og-image.png", width: 1200, height: 630 }],
     },
@@ -55,8 +55,10 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale)
 
+  const htmlLang = locale === "en" ? "es" : "en"
+
   return (
-    <html lang={locale}>
+    <html lang={htmlLang}>
       <body className={`${inter.variable} antialiased`}>
         <NextIntlClientProvider>
           {children}
