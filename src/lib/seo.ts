@@ -8,6 +8,7 @@ export const localBusinessJsonLd = {
     "Empresa de servicios IT en Córdoba, Argentina. DataCenter, soporte 24/7, VoIP, MikroTik, Zabbix, Google Workspace e identidad digital.",
   address: {
     "@type": "PostalAddress",
+    streetAddress: "MQQ4+2H",
     addressLocality: "Córdoba",
     addressRegion: "Córdoba",
     addressCountry: "AR",

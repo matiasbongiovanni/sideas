@@ -69,7 +69,7 @@ export default function Contacto() {
                     {/* Mapa con estilo Premium */}
                     <div className="relative rounded-[2rem] overflow-hidden shadow-2xl shadow-slate-200 border border-slate-200 group min-h-[400px]">
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d54451.12978889586!2d-64.21970005!3d-31.3990649!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9432a28e9a67f0e9%3A0x0!2sMQP4%2BRV7%20C%C3%B3rdoba!5e0!3m2!1ses!2sar!4v1712780000000!5m2!1ses!2sar"                       
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d54451.12978889586!2d-64.21970005!3d-31.3990649!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9432a28e9a67f0e9%3A0x0!2sMQQ4%2B2H%20C%C3%B3rdoba!5e0!3m2!1ses!2sar!4v1712780000000!5m2!1ses!2sar"                       
                             className="absolute inset-0 w-full h-full grayscale-[0.2] contrast-[1.1] transition-all duration-500 group-hover:grayscale-0"
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
