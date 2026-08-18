@@ -3,13 +3,14 @@
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, LogOut, Newspaper, ExternalLink, User, LayoutTemplate, Send } from "lucide-react"
+import { LayoutDashboard, LogOut, Newspaper, ExternalLink, User, LayoutTemplate, Send, Users } from "lucide-react"
 import { adminLogout } from "@/lib/supabase/actions"
 import type { User as SupabaseUser } from "@supabase/supabase-js"
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { href: "/admin#noticias", label: "Noticias / Blog", icon: Newspaper },
+  { href: "/admin#noticias", label: "Noticias / Blog", icon: Newspaper, exact: true },
+  { href: "/admin/usuarios", label: "Usuarios Portal", icon: Users },
 ]
 
 interface AdminSidebarProps {
