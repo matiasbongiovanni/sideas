@@ -25,7 +25,7 @@ export async function generateMetadata({
 export default async function NoticiasPage({
   params,
 }: {
-  params: Promise<{ locale: "es" | "en" }>
+  params: Promise<{ locale: "es" }>
 }) {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: "Noticias" })
@@ -96,7 +96,7 @@ export default async function NoticiasPage({
                   </div>
                   <div className="flex flex-col justify-center gap-5 p-8 lg:p-12">
                     <div className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
-                      {formatNewsDate(featured.published_at, locale)} · {featured.author_name || "SIDEAS Consultores"}
+                      {formatNewsDate(featured.published_at)} · {featured.author_name || "SIDEAS Consultores"}
                     </div>
                     <h2 className="text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl lg:text-4xl">
                       {featured.title}

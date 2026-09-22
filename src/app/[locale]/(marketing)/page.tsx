@@ -3,7 +3,6 @@ import { getTranslations } from "next-intl/server"
 import { Link } from "@/i18n/navigation"
 import Hero from "@/features/marketing/components/Hero"
 import Timeline from "@/features/marketing/components/Timeline"
-import ClientesWrapper from "@/features/marketing/components/ClientesWrapper"
 import FAQ from "@/features/marketing/components/FAQ"
 import Contacto from "./contacto/Contacto"
 import ProyectosPreview from "./proyectos/Preview/ProyectosPreview"
@@ -39,7 +38,6 @@ export default function Home() {
       <Hero />
       <Timeline />
       <ProyectosPreview />
-      <ClientesWrapper />
       <NoticiasSection />
       <Equipo />
       <FAQ />

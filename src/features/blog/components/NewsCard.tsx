@@ -1,12 +1,11 @@
 import Image from "next/image"
-import { useLocale, useTranslations } from "next-intl"
+import { useTranslations } from "next-intl"
 import { Link } from "@/i18n/navigation"
 import type { NewsPost } from "@/lib/news"
 import { formatNewsDate, getExcerpt, NEWS_DEFAULT_COVER } from "@/lib/news"
 
 export default function NewsCard({ post }: { post: NewsPost }) {
   const t = useTranslations("NewsCard")
-  const locale = useLocale()
   const cover = post.cover_image_url || NEWS_DEFAULT_COVER
 
   return (
@@ -28,7 +27,7 @@ export default function NewsCard({ post }: { post: NewsPost }) {
       <div className="flex flex-col gap-4 p-6">
         <div>
           <div className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
-            {formatNewsDate(post.published_at, locale)}
+            {formatNewsDate(post.published_at)}
           </div>
           <h3 className="mt-3 text-2xl font-semibold tracking-tight text-slate-950">
             {post.title}

@@ -11,7 +11,7 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Rutas públicas (marketing): delega en next-intl para locale detection/redirect
-  if (pathname === "/" || pathname.startsWith("/es") || pathname.startsWith("/en")) {
+  if (pathname === "/" || pathname.startsWith("/es")) {
     return handleI18nRouting(request)
   }
 
@@ -77,7 +77,7 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     "/",
-    "/(es|en)/:path*",
+    "/(es)/:path*",
     "/dashboard/:path*",
     "/portal/:path*",
     "/admin/:path*",

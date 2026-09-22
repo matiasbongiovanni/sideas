@@ -9,13 +9,6 @@ const equipoEs: TeamMember[] = [
     linkedinUrl: "https://www.linkedin.com/in/betoacevedo/",
   },
   {
-    id: "rodolfo-abba",
-    name: "Rodolfo Abbá",
-    role: "CTO",
-    photo: "/equipo/rodolfo-abba.png",
-    linkedinUrl: "https://www.linkedin.com/in/rodolfo-gabriel-abb%C3%A1-26137265/",
-  },
-  {
     id: "jose-martinengo",
     name: "José Martinengo",
     role: "CIO",
@@ -23,25 +16,30 @@ const equipoEs: TeamMember[] = [
     linkedinUrl: "https://www.linkedin.com/in/josemartinengo/",
   },
   {
-    id: "maria-casari",
-    name: "María Casari",
-    role: "Analista de infraestructura y soporte IT",
-    photo: "/equipo/maria-casari.jpeg",
-    linkedinUrl: "https://www.linkedin.com/in/maria-silvia-casari-997b4816/",
+    id: "celia-lombardo",
+    name: "Celia Lombardo",
+    role: "Lic. en Sistemas – Especialista en ERP Tango Software",
+    photo: "",
+    linkedinUrl: "https://www.linkedin.com/in/celia-lombardo-049098251/",
   },
   {
-    id: "matias-bongiovanni",
-    name: "Matias Bongiovanni",
-    role: "Desarrollador de proyectos",
-    photo: "/equipo/matias-bongiovanni.jpeg",
-    linkedinUrl: "https://www.linkedin.com/in/matibongiovanni/",
+    id: "andrea-garcia",
+    name: "Andrea Garcia",
+    role: "Analista de Sistemas",
+    photo: "/equipo/andrea-garcia.png",
   },
   {
-    id: "gabriel-rios",
-    name: "Gabriel Angel Rios",
-    role: "Encargado en servicios de Microtik",
-    photo: "/equipo/gabrielrios.jpeg",
-    linkedinUrl: "https://www.linkedin.com/in/gabriel-angel-rios-235636184/",
+    id: "rodolfo-abba",
+    name: "Rodolfo Abbá",
+    role: "CTO",
+    photo: "/equipo/rodolfo-abba.png",
+    linkedinUrl: "https://www.linkedin.com/in/rodolfo-gabriel-abb%C3%A1-26137265/",
+  },
+  {
+    id: "walter-casari",
+    name: "Walter Casari",
+    role: "Especialista en infraestructura de Microsoft",
+    photo: "/equipo/walter-casari.png",
   },
   {
     id: "ivan-calderon",
@@ -51,6 +49,20 @@ const equipoEs: TeamMember[] = [
     linkedinUrl: "https://www.linkedin.com/in/ivan-calderon-9853918a/",
   },
   {
+    id: "gabriel-rios",
+    name: "Gabriel Angel Rios",
+    role: "Encargado en servicios de Microtik",
+    photo: "/equipo/gabrielrios.jpeg",
+    linkedinUrl: "https://www.linkedin.com/in/gabriel-angel-rios-235636184/",
+  },
+  {
+    id: "matias-bongiovanni",
+    name: "Matias Bongiovanni",
+    role: "Desarrollador de proyectos",
+    photo: "/equipo/matias-bongiovanni.jpeg",
+    linkedinUrl: "https://www.linkedin.com/in/matibongiovanni/",
+  },
+  {
     id: "luna-casari",
     name: "Luna Casari",
     role: "Analista de RRHH",
@@ -58,32 +70,14 @@ const equipoEs: TeamMember[] = [
     linkedinUrl: "https://www.linkedin.com/in/luna-casari",
   },
   {
-    id: "walter-casari",
-    name: "Walter Casari",
-    role: "Especialista en infraestructura de Microsoft",
-    photo: "/equipo/walter-casari.png",
-  },
-  {
-    id: "andrea-garcia",
-    name: "Andrea Garcia",
-    role: "Analista de Sistemas",
-    photo: "/equipo/andrea-garcia.png",
+    id: "maria-casari",
+    name: "María Casari",
+    role: "Analista de infraestructura y soporte IT",
+    photo: "/equipo/maria-casari.jpeg",
+    linkedinUrl: "https://www.linkedin.com/in/maria-silvia-casari-997b4816/",
   },
 ]
 
-const equipoEn: TeamMember[] = [
-  { ...equipoEs[0], role: "CEO & Founder" },
-  { ...equipoEs[1], role: "CTO" },
-  { ...equipoEs[2], role: "CIO" },
-  { ...equipoEs[3], role: "Infrastructure & IT Support Analyst" },
-  { ...equipoEs[4], role: "Project Developer" },
-  { ...equipoEs[5], role: "MikroTik Services Lead" },
-  { ...equipoEs[6], role: "MikroTik Services Lead" },
-  { ...equipoEs[7], role: "HR Analyst" },
-  { ...equipoEs[8], role: "Microsoft Infrastructure Specialist" },
-  { ...equipoEs[9], role: "Systems Analyst" },
-]
-
-export function getEquipo(locale: string): TeamMember[] {
-  return locale === "en" ? equipoEs : equipoEn
+export function getEquipo(_locale: string): TeamMember[] {
+  return equipoEs
 }

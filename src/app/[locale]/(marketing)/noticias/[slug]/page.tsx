@@ -80,7 +80,7 @@ export default async function NoticiaDetalle({ params }: Props) {
           <span className="rounded-full bg-[#0B3C78] px-4 py-1 text-xs font-bold uppercase tracking-[0.24em] text-white">
             {post.category}
           </span>
-          <span className="text-sm text-slate-500">{formatNewsDate(post.published_at, locale)}</span>
+          <span className="text-sm text-slate-500">{formatNewsDate(post.published_at)}</span>
           <span className="text-sm text-slate-500">{post.author_name || "SIDEAS Consultores"}</span>
         </div>
 

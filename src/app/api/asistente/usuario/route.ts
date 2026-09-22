@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
+import { after } from "next/server"
 import { requireN8nApiKey } from "@/lib/asistente/auth"
+import { emitirEvento } from "@/lib/asistente/webhooks"
 import { createAdminClient } from "@/lib/supabase/server"
 
 export const maxDuration = 30
@@ -43,5 +45,6 @@ export async function PATCH(req: NextRequest) {
     console.error("PATCH /api/asistente/usuario", error)
     return NextResponse.json({ error: "No se pudo actualizar el perfil" }, { status: 500 })
   }
+  after(() => emitirEvento("usuario.actualizado", data))
   return NextResponse.json(data)
 }

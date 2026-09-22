@@ -6,7 +6,6 @@ import NextLink from "next/link";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { NAV_LINKS } from "@/lib/constants";
-import LanguageSwitcher from "@/features/marketing/components/LanguageSwitcher";
 
 export default function Navbar() {
     const t = useTranslations("Nav");
@@ -49,8 +48,6 @@ export default function Navbar() {
                     {/* Separador sutil */}
                     <div className="h-6 w-px bg-white/10"></div>
 
-                    <LanguageSwitcher />
-
                     {/* CTA Ver Recursos - Desktop */}
                     <NextLink
                         href="/login"
@@ -88,10 +85,6 @@ export default function Navbar() {
                             {t(link.key)}
                         </Link>
                     ))}
-
-                    <div className="px-4 pt-2">
-                        <LanguageSwitcher />
-                    </div>
 
                     {/* CTA Ver Recursos - Mobile */}
                     <div className="mt-2 pt-2 border-t border-white/10">

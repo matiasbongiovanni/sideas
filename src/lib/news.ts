@@ -46,20 +46,20 @@ export function getExcerpt(post: Pick<NewsPost, "excerpt" | "content">, maxLengt
   return `${normalized.slice(0, maxLength).trimEnd()}...`
 }
 
-export function formatNewsDate(value: string | null | undefined, locale: string = "es") {
-  if (!value) return locale === "en" ? "Sin fecha" : "No date"
+export function formatNewsDate(value: string | null | undefined) {
+  if (!value) return "Sin fecha"
 
-  return new Intl.DateTimeFormat(locale === "en" ? "es-AR" : "en-US", {
+  return new Intl.DateTimeFormat("es-AR", {
     day: "2-digit",
     month: "long",
     year: "numeric",
   }).format(new Date(value))
 }
 
-export function formatNewsDateTime(value: string | null | undefined, locale: string = "es") {
-  if (!value) return locale === "en" ? "Sin fecha" : "No date"
+export function formatNewsDateTime(value: string | null | undefined) {
+  if (!value) return "Sin fecha"
 
-  return new Intl.DateTimeFormat(locale === "en" ? "es-AR" : "en-US", {
+  return new Intl.DateTimeFormat("es-AR", {
     day: "2-digit",
     month: "short",
     year: "numeric",

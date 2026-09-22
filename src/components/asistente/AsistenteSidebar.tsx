@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, LogOut, CheckSquare, Users, Mail, Calendar, User } from "lucide-react"
+import { LayoutDashboard, LogOut, CheckSquare, Users, Mail, Calendar, User, Webhook } from "lucide-react"
 import { asistenteLogout } from "@/lib/supabase/actions"
 import type { User as SupabaseUser } from "@supabase/supabase-js"
 
@@ -14,6 +14,7 @@ const navItems = [
   { href: "/asistente/correo", label: "Correo", icon: Mail },
   { href: "/asistente/calendario", label: "Calendario", icon: Calendar },
   { href: "/asistente/usuario", label: "Usuario", icon: User },
+  { href: "/asistente/webhooks", label: "Webhooks", icon: Webhook },
 ]
 
 interface AsistenteSidebarProps {
