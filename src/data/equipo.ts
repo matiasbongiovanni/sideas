@@ -58,7 +58,7 @@ const equipoEs: TeamMember[] = [
   {
     id: "matias-bongiovanni",
     name: "Matias Bongiovanni",
-    role: "Desarrollador de proyectos",
+    role: "Full Stack Developer",
     photo: "/equipo/matias-bongiovanni.jpeg",
     linkedinUrl: "https://www.linkedin.com/in/matibongiovanni/",
   },
