@@ -19,7 +19,7 @@ const equipoEs: TeamMember[] = [
     id: "celia-lombardo",
     name: "Celia Lombardo",
     role: "Lic. en Sistemas – Especialista en ERP Tango Software",
-    photo: "",
+    photo: "/equipo/celia-lombardo.png",
     linkedinUrl: "https://www.linkedin.com/in/celia-lombardo-049098251/",
   },
   {
