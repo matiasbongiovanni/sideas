@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { isAsistenteEmail } from "@/lib/asistente/allowlist"
+import { tieneAal2 } from "@/lib/mfa"
 
 export async function requireAsistenteSession() {
   const supabase = await createClient()
@@ -9,6 +10,7 @@ export async function requireAsistenteSession() {
   } = await supabase.auth.getUser()
 
   if (!user || !isAsistenteEmail(user.email)) return null
+  if (!(await tieneAal2(supabase))) return null
   return { user }
 }
 

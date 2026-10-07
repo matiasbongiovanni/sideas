@@ -2,6 +2,7 @@ import { createAdminClient } from "@/lib/supabase/server"
 import { getExcerpt, slugify, type NewsPost, type NewsStatus, NEWS_TABLE } from "@/lib/news"
 import { createClient } from "@/lib/supabase/server"
 import { isAdminEmail } from "@/lib/admin"
+import { tieneAal2 } from "@/lib/mfa"
 
 type NewsRow = {
   id: string
@@ -46,6 +47,7 @@ export async function requireAdminSession() {
   } = await supabase.auth.getUser()
 
   if (!user || !isAdminEmail(user.email)) return null
+  if (!(await tieneAal2(supabase))) return null
   return { user }
 }
 
