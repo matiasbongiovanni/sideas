@@ -4,7 +4,6 @@ import createMiddleware from "next-intl/middleware"
 import { routing } from "@/i18n/routing"
 import { isAdminEmail } from "@/lib/admin"
 import { isAsistenteEmail } from "@/lib/asistente/allowlist"
-import { estadoMfa, loginParaRuta, sanitizarNext } from "@/lib/mfa"
 
 const handleI18nRouting = createMiddleware(routing)
 
@@ -40,28 +39,6 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Redirect que conserva las cookies de sesión refrescadas por getUser()
-  const redirigir = (url: URL) => {
-    const res = NextResponse.redirect(url)
-    response.cookies.getAll().forEach((c) => res.cookies.set(c))
-    return res
-  }
-
-  // Pantallas de 2FA: requieren sesión (AAL1); si ya está en AAL2 vuelven al destino
-  if (pathname.startsWith("/2fa")) {
-    const next = sanitizarNext(request.nextUrl.searchParams.get("next"))
-    if (!user) return redirigir(new URL(loginParaRuta(next), request.url))
-    const estado = await estadoMfa(supabase)
-    if (estado === "ok") return redirigir(new URL(next, request.url))
-    const destino = `/2fa/${estado}`
-    if (pathname !== destino) {
-      const url = new URL(destino, request.url)
-      url.searchParams.set("next", next)
-      return redirigir(url)
-    }
-    return response
-  }
-
   // Rutas protegidas sin sesión → login
   if (!user && (pathname.startsWith("/dashboard") || pathname.startsWith("/portal"))) {
     const loginUrl = request.nextUrl.clone()
@@ -94,22 +71,6 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // 2FA obligatorio en toda zona privada
-  const zonaPrivada =
-    pathname.startsWith("/dashboard") ||
-    pathname.startsWith("/portal") ||
-    (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login")) ||
-    (pathname.startsWith("/asistente") && !pathname.startsWith("/asistente/login"))
-
-  if (user && zonaPrivada) {
-    const estado = await estadoMfa(supabase)
-    if (estado !== "ok") {
-      const url = new URL(`/2fa/${estado}`, request.url)
-      url.searchParams.set("next", pathname + request.nextUrl.search)
-      return redirigir(url)
-    }
-  }
-
   return response
 }
 
@@ -121,6 +82,5 @@ export const config = {
     "/portal/:path*",
     "/admin/:path*",
     "/asistente/:path*",
-    "/2fa/:path*",
   ],
 }

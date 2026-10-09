@@ -296,29 +296,6 @@ export async function resetPortalUserPassword(input: { userId: string; newPasswo
   return { password: newPassword }
 }
 
-// Borra todos los factores 2FA del usuario: en el próximo ingreso vuelve a escanear el QR
-export async function resetPortalUser2fa(userId: string) {
-  const supabase = await createAdminClient()
-
-  const { data: profile, error: profileError } = await supabase
-    .from("portal_profiles")
-    .select("user_id")
-    .eq("user_id", userId)
-    .maybeSingle()
-  if (profileError) throw new PortalAdminError(profileError.message, 500)
-  if (!profile) throw new PortalAdminError("Usuario no encontrado", 404)
-
-  const { data, error } = await supabase.auth.admin.mfa.listFactors({ userId })
-  if (error) throw new PortalAdminError(error.message, 500)
-
-  for (const factor of data.factors) {
-    const { error: deleteError } = await supabase.auth.admin.mfa.deleteFactor({ id: factor.id, userId })
-    if (deleteError) throw new PortalAdminError(deleteError.message, 500)
-  }
-
-  return { eliminados: data.factors.length }
-}
-
 export async function upsertSharedCredential(input: { endpointId: string; username: string; password: string }) {
   const username = input.username.trim()
   const password = input.password.trim()

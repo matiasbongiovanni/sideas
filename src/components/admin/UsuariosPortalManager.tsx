@@ -15,7 +15,6 @@ import {
   User,
   UserPlus,
   X,
-  ShieldOff,
 } from "lucide-react"
 
 type PortalEndpointType = "inventario" | "zabbix"
@@ -545,19 +544,6 @@ function ClientCard({
     }
   }
 
-  const reset2fa = async (user: PortalUser) => {
-    if (!confirm(`¿Resetear la verificación en dos pasos de ${user.username}? Va a tener que escanear un QR nuevo en su próximo ingreso.`)) return
-    setBusyUserId(user.user_id)
-    try {
-      await apiFetch(`/api/admin/usuarios/usuarios/${user.user_id}/2fa`, { method: "POST", body: JSON.stringify({}) })
-      alert(`2FA reseteado — ${user.username} configura uno nuevo al ingresar.`)
-    } catch (e) {
-      alert(e instanceof Error ? e.message : "Error inesperado")
-    } finally {
-      setBusyUserId(null)
-    }
-  }
-
   const deleteUser = async (user: PortalUser) => {
     if (!confirm(`¿Eliminar definitivamente el usuario ${user.username}? Esta acción no se puede deshacer.`)) return
     setBusyUserId(user.user_id)
@@ -717,14 +703,6 @@ function ClientCard({
                       className="rounded-lg border border-slate-200 p-1.5 text-slate-500 hover:bg-slate-100 disabled:opacity-50"
                     >
                       <Key className="h-3.5 w-3.5" />
-                    </button>
-                    <button
-                      onClick={() => reset2fa(u)}
-                      disabled={busyUserId === u.user_id}
-                      title="Resetear verificación en dos pasos"
-                      className="rounded-lg border border-slate-200 p-1.5 text-slate-500 hover:bg-slate-100 disabled:opacity-50"
-                    >
-                      <ShieldOff className="h-3.5 w-3.5" />
                     </button>
                     <button
                       onClick={() => deleteUser(u)}

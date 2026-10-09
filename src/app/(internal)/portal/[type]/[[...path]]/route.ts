@@ -2,7 +2,6 @@ import { type NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { getEndpointForRequest, getCredential } from "@/lib/portal/queries"
 import { getUpstreamCookie, proxyRequest } from "@/lib/portal/proxy"
-import { tieneAal2 } from "@/lib/mfa"
 
 export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
@@ -18,7 +17,7 @@ async function handler(
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user || !(await tieneAal2(supabase))) {
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
