@@ -7,7 +7,7 @@ import ProyectosPreview from "./proyectos/Preview/ProyectosPreview"
 import BarraCredibilidad from "@/features/marketing/components/home/BarraCredibilidad"
 import DemosVideos from "@/features/marketing/components/home/DemosVideos"
 import ServiciosBloques from "@/features/marketing/components/home/ServiciosBloques"
-import EquipoCompacto from "@/features/marketing/components/home/EquipoCompacto"
+import Equipo from "./equipo/page"
 
 export async function generateMetadata({
   params,
@@ -36,9 +36,9 @@ export default function Home() {
       <DemosVideos />
       <ServiciosBloques />
       <ProyectosPreview />
+      <Equipo />
       <FAQ />
       <Contacto />
-      <EquipoCompacto />
     </>
   )
 }
