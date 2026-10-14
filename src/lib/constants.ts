@@ -2,7 +2,6 @@ export const METADATA_BASE_URL = "https://sideasconsultores.com.ar"
 
 export const NAV_LINKS = [
   { key: "inicio", href: { pathname: "/", hash: "inicio" } },
-  { key: "quienesSomos", href: { pathname: "/", hash: "quienes-somos" } },
   { key: "servicios", href: { pathname: "/servicios" } },
   { key: "proyectos", href: { pathname: "/", hash: "proyectos" } },
   { key: "noticias", href: { pathname: "/noticias" } },
