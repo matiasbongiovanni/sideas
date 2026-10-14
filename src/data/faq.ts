@@ -12,10 +12,22 @@ const faqEs: FAQItem[] = [
       "Somos una empresa cordobesa con foco en resultados reales. Desde 2020 brindamos soporte 24/7, con un equipo de profesionales certificados que conocen la realidad de las PYMES y organismos públicos de la región. No tercerizamos — todo el soporte lo hacemos nosotros directamente.",
   },
   {
+    id: "soporte-247",
+    question: "¿Cómo funciona el soporte 24/7?",
+    answer:
+      "Tenemos un sistema de guardia con técnicos disponibles las 24hs. Podés abrir un ticket vía email, WhatsApp o nuestro portal. Para incidentes críticos (servidor caído, brecha de seguridad), el tiempo de primera respuesta es de menos de 15 minutos.",
+  },
+  {
     id: "backups-resguardo",
     question: "¿Cómo manejan los backups y el resguardo de información?",
     answer:
       "Implementamos políticas de backup 3-2-1: tres copias, en dos medios distintos, con una copia offsite. Usamos herramientas como Veeam, Acronis o soluciones nativas según el entorno. Cada backup se verifica automáticamente y podés consultar el estado en tiempo real.",
+  },
+  {
+    id: "ciberseguridad-firewall",
+    question: "¿Qué soluciones de ciberseguridad ofrecen?",
+    answer:
+      "Implementamos firewalls perimetrales (MikroTik, pfSense, Cisco), antivirus centralizado con consola de gestión, VPN entre sucursales, políticas de contraseñas y autenticación multifactor (MFA). También realizamos análisis de vulnerabilidades y capacitación al personal.",
   },
   {
     id: "mantenimiento-servidores",
@@ -28,18 +40,6 @@ const faqEs: FAQItem[] = [
     question: "¿Pueden ayudarnos a modernizar nuestra infraestructura antigua?",
     answer:
       "Sí. Tenemos experiencia en migraciones de sistemas Windows legacy, virtualización con Hyper-V y VMware, y transición a la nube (AWS, Azure). Trabajamos con un plan de migración que minimiza el tiempo de inactividad y garantiza rollback si algo sale mal.",
-  },
-  {
-    id: "soporte-247",
-    question: "¿Cómo funciona el soporte 24/7?",
-    answer:
-      "Tenemos un sistema de guardia con técnicos disponibles las 24hs. Podés abrir un ticket vía email, WhatsApp o nuestro portal. Para incidentes críticos (servidor caído, brecha de seguridad), el tiempo de primera respuesta es de menos de 15 minutos.",
-  },
-  {
-    id: "ciberseguridad-firewall",
-    question: "¿Qué soluciones de ciberseguridad ofrecen?",
-    answer:
-      "Implementamos firewalls perimetrales (MikroTik, pfSense, Cisco), antivirus centralizado con consola de gestión, VPN entre sucursales, políticas de contraseñas y autenticación multifactor (MFA). También realizamos análisis de vulnerabilidades y capacitación al personal.",
   },
   {
     id: "datacenters",

@@ -1,56 +1,18 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
-import NextLink from "next/link"
 import { useTranslations } from "next-intl"
+import HeroDemoDashboard from "./home/HeroDemoDashboard"
 
-interface Message {
-  role: "user" | "bot"
-  text: string
+function Check() {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" className="mt-0.5 h-5 w-5 shrink-0 text-[#4398FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+    )
 }
 
-const SUGERENCIAS_HERO = [
-  "¿Por qué elegir SIDEAS?",
-  "¿Hacen backup y resguardo?",
-]
-
 export default function Inicio() {
-  const t = useTranslations("Hero")
-  const [messages, setMessages] = useState<Message[]>([
-    { role: "bot", text: "¡Hola! 👋 Bienvenido a SIDEAS Consultores. Estoy aquí para ayudarte con soluciones en infraestructura, ciberseguridad, servidores, backups y más. ¿En qué puedo asistirte hoy?" },
-  ])
-  const [heroInput, setHeroInput] = useState("")
-  const [heroLoading, setHeroLoading] = useState(false)
-  const heroChatRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    heroChatRef.current?.scrollTo({ top: heroChatRef.current.scrollHeight, behavior: "smooth" })
-  }, [messages])
-
-  const sendHero = async (textToSend?: string) => {
-    const text = textToSend || heroInput.trim()
-    if (!text || heroLoading) return
-    setMessages((prev) => [...prev, { role: "user", text }])
-    setHeroInput("")
-    setHeroLoading(true)
-    try {
-      const res = await fetch("/api/chatbot", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
-      })
-      const data = await res.json()
-      const botReply =
-        typeof data === "string"
-          ? data
-          : data?.output ?? data?.message ?? data?.text ?? "Gracias por tu consulta. Un asesor te contactará pronto."
-      setMessages((prev) => [...prev, { role: "bot", text: botReply }])
-    } catch {
-      setMessages((prev) => [...prev, { role: "bot", text: "En este momento no puedo responder. Escribinos a info@sideasconsultores.com.ar" }])
-    } finally {
-      setHeroLoading(false)
-    }
-  }
+    const t = useTranslations("Hero")
     return (
         <section
             id="inicio"
@@ -80,124 +42,63 @@ export default function Inicio() {
                 <div className="absolute bottom-1/3 left-1/4 h-2 w-2 rounded-full bg-[#4398FF]/40 animate-bounce" style={{ animationDuration: "5s", animationDelay: "2s" }} />
             </div>
 
-            <div className="relative z-10 mx-auto max-w-7xl px-6 pt-32 pb-20 lg:px-8 lg:pt-40 lg:pb-28">
+            <div className="relative z-10 mx-auto max-w-7xl px-6 pt-32 pb-40 lg:px-8 lg:pt-40 lg:pb-44">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center">
 
                     {/* Columna Izquierda – Contenido */}
                     <div className="flex flex-col items-start animate-in fade-in slide-in-from-bottom-8 duration-1000">
-                        {/* Etiqueta / Badge */}
-                        <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-[#4398FF]/30 bg-[#4398FF]/10 px-4 py-1.5 transition-colors hover:bg-[#4398FF]/20">
+                        <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-[#4398FF]/30 bg-[#4398FF]/10 px-4 py-1.5">
                             <span className="h-2 w-2 rounded-full bg-[#4398FF] animate-pulse" />
                             <span className="text-xs font-bold tracking-widest uppercase text-[#4398FF]">
                                 {t("badge")}
                             </span>
                         </div>
 
-                        {/* Título Principal */}
                         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light text-white tracking-tight leading-[1.1]">
                             {t("title1")}<br />
-                            {t("title2")}<br />
                             <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-[#4398FF]">
-                                {t("title3")}
-                            </span>
+                                {t("title2")}
+                            </span><br />
+                            {t("title3")}
                         </h1>
 
                         <p className="mt-6 text-xl font-medium text-[#4398FF] tracking-wide">
                             {t("subtitle")}
                         </p>
 
-                        <p className="mt-6 max-w-lg text-lg leading-relaxed text-slate-300">
-                            {t("paragraph")}
-                        </p>
+                        <ul className="mt-6 space-y-3 text-lg text-slate-300">
+                            {(["bullet1", "bullet2", "bullet3"] as const).map((k) => (
+                                <li key={k} className="flex items-start gap-3">
+                                    <Check />
+                                    <span>{t(k)}</span>
+                                </li>
+                            ))}
+                        </ul>
 
-                        <NextLink
-                            href="/login"
-                            className="group mt-10 inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-[#0B3C78] to-[#4398FF] px-8 py-4 text-sm font-bold text-white shadow-lg shadow-[#4398FF]/20 transition-all duration-300 hover:scale-105 hover:shadow-[#4398FF]/40"
-                        >
-                            {t("cta")}
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                        </NextLink>
+                        <div className="mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                            <a
+                                href="#demos"
+                                className="group inline-flex items-center justify-center gap-3 rounded-full bg-gradient-to-r from-[#0B3C78] to-[#4398FF] px-8 py-4 text-sm font-bold text-white shadow-lg shadow-[#4398FF]/20 transition-all duration-300 hover:scale-105 hover:shadow-[#4398FF]/40"
+                            >
+                                {t("ctaPrimary")}
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
+                            </a>
+                            <a
+                                href="#contacto"
+                                className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-8 py-4 text-sm font-bold text-white backdrop-blur transition-colors hover:bg-white/10"
+                            >
+                                {t("ctaSecondary")}
+                            </a>
+                        </div>
+
+                        <p className="mt-4 text-xs text-slate-400">{t("microcopy")}</p>
                     </div>
 
-                    {/* Columna Derecha – Chatbot Funcional */}
+                    {/* Columna Derecha – Dashboard de monitoreo (datos de demostración) */}
                     <div className="hidden lg:flex justify-center animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-200">
-                        <div className="w-full max-w-[420px] h-[480px] rounded-3xl overflow-hidden shadow-2xl flex flex-col bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 transform rotate-1 hover:rotate-0 transition-transform duration-500">
-
-                            {/* Header */}
-                            <div className="flex items-center gap-3 px-5 py-4 border-b border-slate-700/50 bg-slate-800/30 shrink-0">
-                                <div className="relative flex items-center justify-center h-10 w-10 rounded-full bg-gradient-to-tr from-[#0B3C78] to-[#4398FF] text-white font-bold text-sm shadow-md">
-                                    S
-                                    <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-emerald-400 border-2 border-slate-900" />
-                                </div>
-                                <div>
-                                    <h3 className="text-sm font-bold text-white tracking-wide">Asistente SIDEAS</h3>
-                                    <p className="text-xs text-emerald-400 font-medium">● En línea</p>
-                                </div>
-                            </div>
-
-                            {/* Messages */}
-                            <div ref={heroChatRef} className="flex-1 overflow-y-auto p-5 space-y-4 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
-                                {messages.map((msg, i) => (
-                                    <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                                        <div className={`max-w-[85%] px-4 py-3 text-sm leading-relaxed shadow-sm ${msg.role === "user" ? "bg-gradient-to-br from-[#4398FF] to-[#0B3C78] text-white rounded-2xl rounded-tr-sm" : "bg-slate-800 border border-slate-700/50 text-slate-200 rounded-2xl rounded-tl-sm"}`}>
-                                            {msg.text}
-                                        </div>
-                                    </div>
-                                ))}
-
-                                {/* Suggestions */}
-                                {messages.length === 1 && !heroLoading && (
-                                    <div className="flex flex-wrap gap-2 mt-2">
-                                        {SUGERENCIAS_HERO.map((sug, idx) => (
-                                            <button key={idx} onClick={() => sendHero(sug)} className="text-xs text-slate-300 bg-slate-800/50 hover:bg-slate-700 border border-slate-600/50 px-3 py-1.5 rounded-full transition-colors text-left">
-                                                {sug}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-
-                                {/* Loading */}
-                                {heroLoading && (
-                                    <div className="flex justify-start">
-                                        <div className="bg-slate-800 border border-slate-700/50 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
-                                            <span className="flex gap-1.5 items-center h-4">
-                                                {[0, 1, 2].map((i) => (
-                                                    <span key={i} className="h-1.5 w-1.5 rounded-full bg-[#4398FF] animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
-                                                ))}
-                                            </span>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Input */}
-                            <div className="p-4 bg-slate-900/50 border-t border-slate-800 shrink-0">
-                                <div className="relative flex items-center">
-                                    <input
-                                        type="text"
-                                        value={heroInput}
-                                        onChange={(e) => setHeroInput(e.target.value)}
-                                        onKeyDown={(e) => e.key === "Enter" && sendHero()}
-                                        placeholder="Preguntame sobre nuestros servicios..."
-                                        className="w-full bg-slate-800/50 border border-slate-700 text-white rounded-full pl-4 pr-12 py-3 text-sm focus:outline-none focus:border-[#4398FF]/50 focus:ring-1 focus:ring-[#4398FF]/50 transition-all placeholder:text-slate-500 disabled:opacity-50"
-                                        disabled={heroLoading}
-                                    />
-                                    <button
-                                        onClick={() => sendHero()}
-                                        disabled={heroLoading || !heroInput.trim()}
-                                        className="absolute right-1.5 p-2 rounded-full bg-[#4398FF] text-white transition-all hover:bg-blue-400 disabled:opacity-0 disabled:scale-75"
-                                        aria-label="Enviar mensaje"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-
-                        </div>
+                        <HeroDemoDashboard />
                     </div>
                 </div>
             </div>

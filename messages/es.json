@@ -16,15 +16,19 @@
     "toggleMenu": "Alternar menú"
   },
   "Hero": {
-    "badge": "Ingeniería, Tecnología y Futuro",
-    "title1": "Soluciones",
-    "title2": "integrales y",
-    "title3": "personalizadas",
-    "subtitle": "Infraestructura & Sistemas",
-    "paragraph": "Integramos ingeniería, construcción de Data Centers y administración de servidores para garantizar entornos tecnológicos sólidos, seguros y escalables. Gestionamos almacenamiento, monitoreo y procesos de backup —tanto manuales como automáticos— con disponibilidad 24/7. Ofrecemos soluciones completas para PYMES de 50 a 200 puestos que buscan confiabilidad, alto rendimiento y continuidad operativa.",
-    "cta": "Ver recursos",
+    "badge": "Infraestructura IT · Córdoba",
+    "title1": "Tu infraestructura,",
+    "title2": "funcionando",
+    "title3": "y a la vista",
+    "subtitle": "Monitoreo, soporte y continuidad 24/7",
     "locationLabel": "ESTAMOS EN:",
-    "growingNote": "...y seguimos creciendo."
+    "growingNote": "...y seguimos creciendo.",
+    "bullet1": "Para PYMES de 50 a 200 puestos",
+    "bullet2": "Soporte 24/7 con ingenieros que conocen tu red",
+    "bullet3": "Ves tu red en tiempo real, sin depender de que te avisen",
+    "ctaPrimary": "Ver los demos",
+    "ctaSecondary": "Hablar con un ingeniero",
+    "microcopy": "Sin registro. Los videos se abren directo."
   },
   "Timeline": {
     "kicker1": "Evolución Tecnológica",
@@ -212,6 +216,64 @@
     "noticiasKicker2": "más recientes.",
     "verTodosBlogs": "Ver todos nuestros blogs",
     "sinPublicaciones": "Aún no hay publicaciones.",
-    "cuandoSubas": "Cuando subas la primera noticia desde el CMS, aparecerá acá automáticamente."
+    "cuandoSubas": "Cuando subas la primera noticia desde el CMS, aparecerá acá automáticamente.",
+    "credibilidad": {
+      "fundacion": "Desde",
+      "clientes": "Clientes activos",
+      "soporte": "Soporte disponible",
+      "servicios": "Servicios IT"
+    },
+    "demos": {
+      "badge": "Ver para creer",
+      "titlePrefix": "Mirá exactamente",
+      "titleBold": "lo que vas a ver",
+      "subtitle": "Monitoreo, inventario y gestión de soporte, mostrados con datos de demostración.",
+      "disclaimer": "Datos de demostración",
+      "verVideo": "Ver video",
+      "cerrar": "Cerrar",
+      "zabbixKicker": "Monitoreo Zabbix",
+      "zabbixTitle": "Sabé antes que tu gente",
+      "zabbixText": "Alertas antes de que el usuario note la caída.",
+      "inventarioKicker": "Inventario de activos",
+      "inventarioTitle": "Todo tu parque, en una lista",
+      "inventarioText": "Qué equipos tenés, dónde y en qué estado.",
+      "ticketeraKicker": "Ticketera",
+      "ticketeraTitle": "Nada se pierde en un WhatsApp",
+      "ticketeraText": "Cada pedido con responsable y estado.",
+      "ctaFinal": "Quiero esto para mi empresa"
+    },
+    "dashboard": {
+      "titulo": "Monitoreo en vivo",
+      "demo": "Demo",
+      "hosts": "Hosts",
+      "uptime": "Uptime",
+      "alertas": "Alertas activas",
+      "respuesta": "Resp. media",
+      "latencia": "Latencia · últimos 60 s",
+      "eventos": "Eventos recientes",
+      "ev1": "SRV-APP-02 · CPU normalizada",
+      "ev2": "SW-CORE-01 · errores en puerto 24",
+      "ev3": "Backup nocturno completado",
+      "pie": "Datos de demostración"
+    },
+    "servicios": {
+      "badge": "Qué hacemos",
+      "titlePrefix": "Todo lo que tu empresa necesita",
+      "titleBold": "para no frenar",
+      "verTodos": "Ver los 12 servicios",
+      "b1Title": "Infraestructura",
+      "b1Text": "Servidores, DataCenter y sistemas operativos en PC, servidores y nube.",
+      "b2Title": "Redes y conectividad",
+      "b2Text": "MikroTik y Cisco, VPN entre sucursales y telefonía VoIP.",
+      "b3Title": "Seguridad y continuidad",
+      "b3Text": "Antivirus centralizado, monitoreo Zabbix y migraciones sin cortes.",
+      "b4Title": "Nube y productividad",
+      "b4Text": "Google Workspace, identidad digital y soporte IT 24/7."
+    },
+    "equipo": {
+      "titulo": "Del otro lado hay un equipo",
+      "subtitulo": "11 personas que conocen tu infraestructura por nombre.",
+      "verEquipo": "Conocé al equipo"
+    }
   }
 }
