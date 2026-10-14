@@ -18,7 +18,7 @@ const equipoEs: TeamMember[] = [
   {
     id: "celia-lombardo",
     name: "Celia Lombardo",
-    role: "Lic. en Sistemas – Especialista en ERP Tango Software",
+    role: "Licenciada Universitaria en Sistemas / Técnica Certificada por Axoft Argentina - Tango Gestion Software",
     photo: "/equipo/celia-lombardo.png",
     linkedinUrl: "https://www.linkedin.com/in/celia-lombardo-049098251/",
   },
@@ -44,14 +44,14 @@ const equipoEs: TeamMember[] = [
   {
     id: "ivan-calderon",
     name: "Ivan Calderon",
-    role: "Encargado de servicios de microtik",
+    role: "Encargado de servicios de MikroTik",
     photo: "/equipo/ivan-calderon.jpeg",
     linkedinUrl: "https://www.linkedin.com/in/ivan-calderon-9853918a/",
   },
   {
     id: "gabriel-rios",
     name: "Gabriel Angel Rios",
-    role: "Encargado en servicios de Microtik",
+    role: "Encargado de servicios de MikroTik",
     photo: "/equipo/gabrielrios.jpeg",
     linkedinUrl: "https://www.linkedin.com/in/gabriel-angel-rios-235636184/",
   },
@@ -75,6 +75,13 @@ const equipoEs: TeamMember[] = [
     role: "Analista de infraestructura y soporte IT",
     photo: "/equipo/maria-casari.jpeg",
     linkedinUrl: "https://www.linkedin.com/in/maria-silvia-casari-997b4816/",
+  },
+  {
+    id: "lucia-parodi",
+    name: "Lucía Parodi",
+    role: "Lic. en Comercialización, especializada en formación para empresas",
+    photo: "/equipo/lucia-parodi.jpeg",
+    linkedinUrl: "https://www.linkedin.com/in/luparodi",
   },
 ]
 

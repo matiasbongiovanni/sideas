@@ -5,6 +5,15 @@ import Marquee from "react-fast-marquee"
 import { useTranslations } from "next-intl"
 import { clientes } from "@/data/clientes"
 
+// Todos los logos con el mismo peso visual que CREDICOR (140×70): misma área, alto tope 70px.
+const AREA_LOGO = 140 * 70
+const ALTO_MAX = 70
+
+function tamanoLogo(ratio = 2) {
+    const alto = Math.min(ALTO_MAX, Math.sqrt(AREA_LOGO / ratio))
+    return { width: Math.round(alto * ratio), height: Math.round(alto) }
+}
+
 // Franja oscura bajo el hero: "Nos eligen desde 2020" + cinta de logos de clientes.
 export default function BarraCredibilidad() {
     const t = useTranslations("HomePage.credibilidad")
@@ -18,8 +27,8 @@ export default function BarraCredibilidad() {
                     {clientes.map((c) =>
                         c.logo ? (
                             <div key={c.id} className="mx-8 flex items-center justify-center md:mx-12">
-                                <div className={`relative ${c.wide ? "h-[90px] w-[260px]" : "h-[70px] w-[180px]"}`}>
-                                    <Image src={c.logo} alt={c.name} fill className="object-contain opacity-70" sizes="260px" />
+                                <div className="relative" style={tamanoLogo(c.ratio)}>
+                                    <Image src={c.logo} alt={c.name} fill className="object-contain opacity-70" sizes="300px" />
                                 </div>
                             </div>
                         ) : null

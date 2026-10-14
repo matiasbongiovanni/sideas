@@ -31,4 +31,6 @@ export interface Client {
   name: string
   logo: string | null
   wide?: boolean
+  // ancho/alto del logo ya recortado (sin margen transparente)
+  ratio?: number
 }

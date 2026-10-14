@@ -42,8 +42,8 @@ export default function Home() {
       <DemosVideos />
       <ServiciosBloques />
       <ProyectosPreview />
-      <NoticiasSection />
       <Equipo />
+      <NoticiasSection />
       <FAQ />
       <Contacto />
     </>

@@ -4,8 +4,8 @@ export const NAV_LINKS = [
   { key: "inicio", href: { pathname: "/", hash: "inicio" } },
   { key: "servicios", href: { pathname: "/servicios" } },
   { key: "proyectos", href: { pathname: "/", hash: "proyectos" } },
-  { key: "noticias", href: { pathname: "/noticias" } },
   { key: "equipo", href: { pathname: "/", hash: "equipo" } },
+  { key: "noticias", href: { pathname: "/noticias" } },
   { key: "contacto", href: { pathname: "/", hash: "contacto" } },
 ] as const
 
